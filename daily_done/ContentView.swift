@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  daily_done
-//
-//  Created by Patrik Noordh on 2026-04-27.
-//
-
 import SwiftUI
 
 struct ContentView: View {
