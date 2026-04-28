@@ -7,6 +7,7 @@ DerivedData/
 *.perspectivev3
 *.xcworkspace/xcuserdata/
 *.xcworkspace/xcshareddata/
+**/xcshareddata/
 xcuserdata/
 *.xcodeproj/xcuserdata/
 *.xcodeproj/xcshareddata/
@@ -26,6 +27,7 @@ Podfile.lock
 
 # Firebase config
 GoogleService-Info.plist
+GoogleService-Info-*.plist
 
 # macOS
 .DS_Store
