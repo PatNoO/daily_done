@@ -26,6 +26,7 @@ Podfile.lock
 
 # Firebase config
 GoogleService-Info.plist
+GoogleService-Info-*.plist
 
 # macOS
 .DS_Store
