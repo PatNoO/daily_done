@@ -42,7 +42,6 @@
 			isa = PBXGroup;
 			children = (
 				270BF9C32F9FED4900850F6F /* daily_done */,
-				270BF9E12FA0B26500850F6F /* Frameworks */,
 				270BF9C22F9FED4900850F6F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -53,13 +52,6 @@
 				270BF9C12F9FED4900850F6F /* daily_done.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		270BF9E12FA0B26500850F6F /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
