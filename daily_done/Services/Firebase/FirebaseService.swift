@@ -2,7 +2,7 @@ import FirebaseFirestore
 import Foundation
 
 protocol FirebaseServiceProtocol {
-    func fetchHabits() async throws -> [String: Any]
+    func fetchHabits(userId: String) async throws -> [Habit]
 }
 
 actor FirebaseService: FirebaseServiceProtocol {
@@ -12,11 +12,16 @@ actor FirebaseService: FirebaseServiceProtocol {
 
     private init() {}
 
-    func fetchHabits() async throws -> [String: Any] {
-        // TODO: Replace with typed Habit model when DD-003 lands
-        let snapshot = try await db.collection("habits").getDocuments()
-        return Dictionary(uniqueKeysWithValues: snapshot.documents.map {
-            ($0.documentID, $0.data())
-        })
+    func fetchHabits(userId: String) async throws -> [Habit] {
+        let snapshot =
+            try await db
+            .collection("habits")
+            .whereField("userId", isEqualTo: userId)
+            .getDocuments()
+        return try await MainActor.run {
+            try snapshot.documents.compactMap {
+                try $0.data(as: Habit.self)
+            }
+        }
     }
 }
