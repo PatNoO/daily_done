@@ -1,30 +1,40 @@
-import Foundation
 import Combine
+import Foundation
 
 @MainActor
 final class HabitViewModel: ObservableObject {
     @Published var habits: [Habit] = []
     @Published var isLoading: Bool = false
-    @Published var errorMessage: String?
+    @Published var error: HabitError?
 
     private let service: FirebaseServiceProtocol
 
-    init(service: FirebaseServiceProtocol = FirebaseService.shared) {
-        self.service = service
+    init(service: FirebaseServiceProtocol? = nil) {
+        self.service = service ?? FirebaseService.shared
     }
 
-    func fetchHabits() async {
-        isLoading = true
-        errorMessage = nil
-
-        do {
-            habits = try await service.fetchHabits(userId: "preview-user")
-        } catch {
-            errorMessage = "Could not load habits. Please try again."
-            print(
-                "HabitListViewModel fetchHabits error: \(error.localizedDescription)"
-            )
+    func loadHabits() async {
+            isLoading = true
+            defer { isLoading = false }
+            do {
+                // TODO: Byt till Auth.auth().currentuser....  - senare tillfälle
+                habits = try await service.fetchHabits(userId: "preview-user")
+            } catch let fetchError {
+                error = .loadFailed(fetchError)
+                print("HabitViewModel loadHabits: \(fetchError.localizedDescription)")
+            }
         }
-        isLoading = false
     }
-}
+
+    extension HabitViewModel {
+        enum HabitError: LocalizedError {
+            case loadFailed(Error)
+
+            var errorDescription: String? {
+                switch self {
+                case .loadFailed:
+                    return "Could not load habits. Please try again."
+                }
+            }
+        }
+    }
