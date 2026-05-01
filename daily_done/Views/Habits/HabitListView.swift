@@ -9,8 +9,7 @@ struct HabitListView: View {
             .navigationTitle("Daily Done")
             .toolbar { toolbarContent }
             .sheet(isPresented: $showCreateSheet) {
-                Text("Create Habit — coming in DD-006")
-                    .padding()
+                CreateHabitSheet(vm: vm)
             }
             .task {
                 await vm.loadHabits()
