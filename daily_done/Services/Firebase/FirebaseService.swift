@@ -3,6 +3,8 @@ import Foundation
 
 protocol FirebaseServiceProtocol {
     func fetchHabits(userId: String) async throws -> [Habit]
+    func createHabit(_ habit: Habit) async throws
+
 }
 
 actor FirebaseService: FirebaseServiceProtocol {
@@ -23,5 +25,13 @@ actor FirebaseService: FirebaseServiceProtocol {
                 try $0.data(as: Habit.self)
             }
         }
+    }
+    
+    func createHabit(_ habit: Habit) async throws {
+        let ref = db.collection("habits").document()
+        let data = try await MainActor.run {
+            try Firestore.Encoder().encode(habit)
+        }
+        try await ref.setData(data)
     }
 }
