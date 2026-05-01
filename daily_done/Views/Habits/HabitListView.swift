@@ -5,40 +5,38 @@ struct HabitListView: View {
     @State private var showCreateSheet = false
 
     var body: some View {
-        NavigationStack {
-            contentView
-                .navigationTitle("Daily Done")
-                .toolbar { toolbarContent }
-                .sheet(isPresented: $showCreateSheet) {
-                    Text("Create Habit — coming in DD-006")
-                        .padding()
-                }
-                .task {
-                    await vm.loadHabits()
+        contentView
+            .navigationTitle("Daily Done")
+            .toolbar { toolbarContent }
+            .sheet(isPresented: $showCreateSheet) {
+                Text("Create Habit — coming in DD-006")
+                    .padding()
+            }
+            .task {
+                await vm.loadHabits()
 
-                }
-                .alert(
-                    "Error",
-                    isPresented: Binding(
-                        get: { vm.error != nil },
-                        set: { if !$0 { vm.error = nil } }
-                    )
-                ) {
-                    Button("Retry") { Task { await vm.loadHabits() } }
-                    Button("Dismiss", role: .cancel) { vm.error = nil }
-                } message: {
-                    Text(vm.error?.errorDescription ?? "")
-                }
-        }
+            }
+            .alert(
+                "Error",
+                isPresented: Binding(
+                    get: { vm.error != nil },
+                    set: { if !$0 { vm.error = nil } }
+                )
+            ) {
+                Button("Retry") { Task { await vm.loadHabits() } }
+                Button("Dismiss", role: .cancel) { vm.error = nil }
+            } message: {
+                Text(vm.error?.errorDescription ?? "")
+            }
 
     }
-    
+
     @ViewBuilder
     private var contentView: some View {
         if vm.isLoading {
             ProgressView("Loading habits..")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }else if vm.habits.isEmpty {
+        } else if vm.habits.isEmpty {
             ContentUnavailableView(
                 "No Habits Yet",
                 systemImage: "checkmark.circle",
@@ -48,28 +46,31 @@ struct HabitListView: View {
             habitList
         }
     }
-    
-    private var habitList: some View {
-          List(vm.habits) { habit in
-              HabitRowView(habit: habit)
-                  .listRowSeparator(.hidden)
-                  .listRowBackground(Color.clear)
-          }
-          .listStyle(.plain)
-      }
-    
-    @ToolbarContentBuilder
-      private var toolbarContent: some ToolbarContent {
-          ToolbarItem(placement: .topBarTrailing) {
-              Button {
-                  showCreateSheet = true
-              } label: {
-                  Label("Add Habit", systemImage: "plus")
-              }
-          }
-      }
-  }
 
-  #Preview {
-      HabitListView()
-  }
+    private var habitList: some View {
+        List(vm.habits) { habit in
+            HabitRowView(habit: habit)
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+        }
+        .listStyle(.plain)
+    }
+
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            Button {
+                showCreateSheet = true
+            } label: {
+                Label("Add Habit", systemImage: "plus")
+            }
+        }
+    }
+}
+
+#Preview {
+    NavigationStack {
+        HabitListView()
+
+    }
+}
