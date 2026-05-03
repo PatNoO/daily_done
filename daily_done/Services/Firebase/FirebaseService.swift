@@ -26,7 +26,7 @@ actor FirebaseService: FirebaseServiceProtocol {
             }
         }
     }
-    
+
     func createHabit(_ habit: Habit) async throws {
         let ref = db.collection("habits").document()
         let data = try await MainActor.run {
@@ -34,4 +34,41 @@ actor FirebaseService: FirebaseServiceProtocol {
         }
         try await ref.setData(data)
     }
+
+    func habitLogComplition(habitId: String, userId: String) async throws {
+
+        let log = HabitLog(
+            id: UUID().uuidString,
+            habitId: habitId,
+            userId: userId,
+            completedAt: Date(),
+            location: nil
+        )
+        let ref = db.collection("habitLogs").document()
+        let data = try await MainActor.run {
+            try Firestore.Encoder().encode(log)
+        }
+        try await ref.setData(data)
+    }
+    
+    func fetchTodayLogs (userId: String) async throws -> [HabitLog] {
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: Date())
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)
+        
+        let snapshot = try await db
+            .collection("habitLogs")
+            .whereField("userId", isEqualTo: userId)
+            .whereField("completedAt", isGreaterThanOrEqualTo: startOfDay)
+            .whereField("completedAt", isLessThan: endOfDay ) // undersök varning innan push
+            .getDocuments()
+        
+        return try await MainActor.run {
+            try snapshot.documents.compactMap{
+                try $0.data(as: HabitLog.self)
+            }
+        }
+        
+    }
+
 }
