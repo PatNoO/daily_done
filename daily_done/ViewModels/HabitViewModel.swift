@@ -17,22 +17,25 @@ final class HabitViewModel: ObservableObject {
     func loadHabits() async {
         isLoading = true
         defer { isLoading = false }
+
         do {
-            async let fetchedHabits = service.fetchHabits(
-                userId: "preview-user"
-            )
-            async let fetchedLogs = service.fetchTodayLogs(
-                userId: "preview-user"
-            )
-            let (loadedHabits, todayLogs) = try await (
-                fetchedHabits, fetchedLogs
-            )
-            habits = loadedHabits
-            completedHabitIds = Set(todayLogs.compactMap { $0.habitId })
+            habits = try await service.fetchHabits(userId: "preview-user")
         } catch let fetchError {
             error = .loadFailed(fetchError)
             print(
-                "HabitViewModel loadHabits: \(fetchError.localizedDescription)"
+                "HabitViewModel fetchHabits failed: \(fetchError.localizedDescription)"
+            )
+            return
+        }
+
+        do {
+            let todayLogs = try await service.fetchTodayLogs(
+                userId: "preview-user"
+            )
+            completedHabitIds = Set(todayLogs.compactMap { $0.habitId })
+        } catch let logError {
+            print(
+                "HabitViewModel fetchTodayLogs failed: \(logError.localizedDescription)"
             )
         }
     }
