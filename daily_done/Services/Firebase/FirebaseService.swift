@@ -6,6 +6,7 @@ protocol FirebaseServiceProtocol {
     func createHabit(_ habit: Habit) async throws
     func habitLogComplition(habitId: String, userId: String) async throws
      func fetchTodayLogs(userId: String) async throws -> [HabitLog]
+    func fetchAllLogs(userId: String) async throws -> [HabitLog]
 }
 
 actor FirebaseService: FirebaseServiceProtocol {
@@ -56,20 +57,34 @@ actor FirebaseService: FirebaseServiceProtocol {
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: Date())
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)
-        
+
         let snapshot = try await db
             .collection("habitLogs")
             .whereField("userId", isEqualTo: userId)
             .whereField("completedAt", isGreaterThanOrEqualTo: startOfDay)
             .whereField("completedAt", isLessThan: endOfDay ) // undersök varning innan push
             .getDocuments()
-        
+
         return try await MainActor.run {
             try snapshot.documents.compactMap{
                 try $0.data(as: HabitLog.self)
             }
         }
-        
+
+    }
+
+    func fetchAllLogs(userId: String) async throws -> [HabitLog] {
+        let snapshot = try await db
+            .collection("habitLogs")
+            .whereField("userId", isEqualTo: userId)
+            .order(by: "completedAt", descending: true)
+            .getDocuments()
+
+        return try await MainActor.run {
+            try snapshot.documents.compactMap {
+                try $0.data(as: HabitLog.self)
+            }
+        }
     }
 
 }
