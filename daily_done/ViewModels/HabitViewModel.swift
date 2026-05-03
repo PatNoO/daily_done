@@ -38,6 +38,29 @@ final class HabitViewModel: ObservableObject {
                 "HabitViewModel fetchTodayLogs failed: \(logError.localizedDescription)"
             )
         }
+
+        do {
+            let allLogs = try await service.fetchAllLogs(userId: "preview-user")
+            refreshStreaks(from: allLogs)
+        } catch let streakError {
+            print(
+                "HabitViewModel fetchAllLogs failed: \(streakError.localizedDescription)"
+            )
+        }
+    }
+
+    private func refreshStreaks(from logs: [HabitLog]) {
+        habits = habits.map { habit in
+            let habitLogs = logs.filter { $0.habitId == habit.id }
+            var updated = habit
+            updated.currentStreak = StreakCalculator.currentStreak(
+                from: habitLogs
+            )
+            updated.longestStreak = StreakCalculator.longestStreak(
+                from: habitLogs
+            )
+            return updated
+        }
     }
 
     func createHabit(
