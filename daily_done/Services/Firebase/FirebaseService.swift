@@ -4,7 +4,8 @@ import Foundation
 protocol FirebaseServiceProtocol {
     func fetchHabits(userId: String) async throws -> [Habit]
     func createHabit(_ habit: Habit) async throws
-
+    func habitLogComplition(habitId: String, userId: String) async throws
+     func fetchTodayLogs(userId: String) async throws -> [HabitLog]
 }
 
 actor FirebaseService: FirebaseServiceProtocol {
