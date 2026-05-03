@@ -48,9 +48,13 @@ struct HabitListView: View {
 
     private var habitList: some View {
         List(vm.habits) { habit in
-            HabitRowView(habit: habit)
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.clear)
+            HabitRowView(
+                habit: habit,
+                isCompleted: vm.completedHabitIds.contains(habit.id ?? ""),
+                onToggle: { Task { await vm.toggleCompletion(for: habit) } }
+            )
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
         }
         .listStyle(.plain)
     }
