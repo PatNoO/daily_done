@@ -11,8 +11,7 @@ struct ContentView: View {
             }
             
             NavigationStack{
-                Text("Stats view Coming Soon")
-                    .navigationTitle(Text("Stats"))
+                StatsView()
             }
             .tabItem {
                 Label("Stats", systemImage: "chart.bar")
