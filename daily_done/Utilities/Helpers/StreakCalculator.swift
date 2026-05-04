@@ -13,7 +13,11 @@ enum StreakCalculator {
         for day in days {
             if day == expectedDay {
                 streak += 1
-                expectedDay = Calendar.current.date(byAdding: .day, value: -1, to: expectedDay)!
+                expectedDay = Calendar.current.date(
+                    byAdding: .day,
+                    value: -1,
+                    to: expectedDay
+                )!
             } else {
                 break
             }
@@ -29,9 +33,12 @@ enum StreakCalculator {
         var currentRun = 1
 
         for i in 1..<days.count {
-            let daysBetween = Calendar.current.dateComponents(
-                [.day], from: days[i], to: days[i - 1]
-            ).day ?? 0
+            let daysBetween =
+                Calendar.current.dateComponents(
+                    [.day],
+                    from: days[i],
+                    to: days[i - 1]
+                ).day ?? 0
 
             if daysBetween == 1 {
                 currentRun += 1
@@ -43,10 +50,11 @@ enum StreakCalculator {
         return longest
     }
 
-
     private static func completedDays(from logs: [HabitLog]) -> [Date] {
         let calendar = Calendar.current
-        let uniqueDays = Set(logs.map { calendar.startOfDay(for: $0.completedAt) })
+        let uniqueDays = Set(
+            logs.map { calendar.startOfDay(for: $0.completedAt) }
+        )
         return uniqueDays.sorted(by: >)
     }
 }
