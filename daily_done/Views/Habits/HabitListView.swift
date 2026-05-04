@@ -47,14 +47,23 @@ struct HabitListView: View {
     }
 
     private var habitList: some View {
-        List(vm.habits) { habit in
-            HabitRowView(
-                habit: habit,
-                isCompleted: vm.completedHabitIds.contains(habit.id ?? ""),
-                onToggle: { Task { await vm.toggleCompletion(for: habit) } }
-            )
-            .listRowSeparator(.hidden)
-            .listRowBackground(Color.clear)
+        List {
+            ForEach(vm.habits) { habit in
+                HabitRowView(
+                    habit: habit,
+                    isCompleted: vm.completedHabitIds.contains(habit.id ?? ""),
+                    onToggle: { Task { await vm.toggleCompletion(for: habit) } }
+                )
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+            }
+            .onDelete { indexSet in
+                for i in indexSet {
+                    let habit = vm.habits[i]
+                    Task { await vm.deleteHabit(habit) }
+                }
+            }
+            
         }
         .listStyle(.plain)
     }
