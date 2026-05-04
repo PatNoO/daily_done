@@ -109,6 +109,26 @@ final class HabitViewModel: ObservableObject {
             )
         }
     }
+
+    func deleteHabit(_ habit: Habit) async {
+        guard let habitId = habit.id else { return }
+
+        habits.removeAll { $0.id == habitId }
+
+        do {
+            try await service.deleteHabit(
+                habitId: habitId,
+                userId: habit.userId
+            )
+        } catch let deleteError {
+            habits.append(habit)
+            error = .deleteFailed(deleteError)
+            print(
+                "HabitViewModel deleteHabit: \(deleteError.localizedDescription)"
+            )
+
+        }
+    }
 }
 
 extension HabitViewModel {
@@ -116,6 +136,7 @@ extension HabitViewModel {
         case loadFailed(Error)
         case nameMissing
         case saveFailed(Error)
+        case deleteFailed(Error)
 
         var errorDescription: String? {
             switch self {
@@ -125,6 +146,8 @@ extension HabitViewModel {
                 return "Please enter a name for the habit."
             case .saveFailed:
                 return "Could not save habit. Please try again."
+            case .deleteFailed:
+                return "Could not delete habit. Please try again."
             }
         }
     }
