@@ -2,7 +2,7 @@ import SwiftUI
 
 struct SignInView: View {
 
-    @ObservedObject var viewModel: AuthViewModel
+    @ObservedObject var vm: AuthViewModel
 
     @State private var email = ""
     @State private var password = ""
@@ -41,13 +41,13 @@ struct SignInView: View {
         .alert(
             "Sign In Failed",
             isPresented: Binding(
-                get: { viewModel.error != nil },
-                set: { if !$0 { viewModel.error = nil } }
+                get: { vm.error != nil },
+                set: { if !$0 { vm.error = nil } }
             )
         ) {
-            Button("OK") { viewModel.error = nil }
+            Button("OK") { vm.error = nil }
         } message: {
-            Text(viewModel.error?.localizedDescription ?? "")
+            Text(vm.error?.localizedDescription ?? "")
         }
     }
 
@@ -129,7 +129,7 @@ struct SignInView: View {
             Task { await signIn() }
         } label: {
             HStack(spacing: 8) {
-                if viewModel.isLoading {
+                if vm.isLoading {
                     ProgressView().tint(.white)
                 } else {
                     Text("Sign In").fontWeight(.semibold)
@@ -151,7 +151,7 @@ struct SignInView: View {
             .opacity(email.isEmpty || password.isEmpty ? 0.6 : 1.0)
         }
 
-        .disabled(viewModel.isLoading || email.isEmpty || password.isEmpty)
+        .disabled(vm.isLoading || email.isEmpty || password.isEmpty)
     }
 
     private var signUpFooter: some View {
@@ -168,11 +168,11 @@ struct SignInView: View {
 
     private func signIn() async {
         focusedField = nil
-        await viewModel.signIn(email: email, password: password)
+        await vm.signIn(email: email, password: password)
     }
 }
 
 #Preview {
-    SignInView(viewModel: AuthViewModel())
+    SignInView(vm: AuthViewModel())
         .preferredColorScheme(.dark)
 }
