@@ -198,5 +198,5 @@ struct CreateHabitSheet: View {
     }
 }
 #Preview {
-    CreateHabitSheet(vm: HabitViewModel())
+    CreateHabitSheet(vm: HabitViewModel(userId: "preview-user"))
 }
