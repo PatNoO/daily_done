@@ -42,6 +42,18 @@ struct StatsView: View {
                         .padding(.horizontal, DesignSystem.Spacing.base)
                     WeeklyChartView(stats: vm.weeklyStats)
                         .padding(.horizontal, DesignSystem.Spacing.base)
+                    
+                    Divider()
+                         .padding(.horizontal, DesignSystem.Spacing.base)
+
+                    
+                     Text("THIS MONTH")
+                         .font(.caption)
+                         .foregroundStyle(Color("textSecondary"))
+                         .padding(.horizontal, DesignSystem.Spacing.base)
+
+                     MonthlyHeatmapView(stats: vm.monthlyStats)
+                         .padding(.horizontal, DesignSystem.Spacing.base)
                 }
                 .padding(.top, DesignSystem.Spacing.base)
             }
