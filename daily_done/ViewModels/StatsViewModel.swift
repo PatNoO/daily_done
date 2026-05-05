@@ -15,8 +15,10 @@ final class StatsViewModel: ObservableObject {
     @Published var error: StatsError?
 
     private let service: FirebaseServiceProtocol
+    private let userId: String
 
-    init(service: FirebaseServiceProtocol? = nil) {
+    init(userId: String, service: FirebaseServiceProtocol? = nil) {
+        self.userId = userId
         self.service = service ?? FirebaseService.shared
     }
 
@@ -25,10 +27,8 @@ final class StatsViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            async let fetchedHabits = service.fetchHabits(
-                userId: "preview-user"
-            )
-            async let fetchedLogs = service.fetchAllLogs(userId: "preview-user")
+            async let fetchedHabits = service.fetchHabits(userId: userId)
+            async let fetchedLogs = service.fetchAllLogs(userId: userId)
 
             let (habits, logs) = try await (fetchedHabits, fetchedLogs)
 
