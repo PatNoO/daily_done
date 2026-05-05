@@ -10,6 +10,7 @@ struct DayStat: Identifiable {
 final class StatsViewModel: ObservableObject {
     @Published var weeklyStats: [DayStat] = []
     @Published var monthlyStats: [DayStat] = []
+    @Published var habitStats: [Habit] = []
     @Published var isLoading = false
     @Published var error: StatsError?
 
@@ -24,13 +25,32 @@ final class StatsViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            let logs = try await service.fetchAllLogs(userId: "preview-user")
+            async let fetchedHabits = service.fetchHabits(
+                userId: "preview-user"
+            )
+            async let fetchedLogs = service.fetchAllLogs(userId: "preview-user")
+
+            let (habits, logs) = try await (fetchedHabits, fetchedLogs)
+
             let filtered =
                 habitId.map { id in
                     logs.filter { $0.habitId == id }
                 } ?? logs
             weeklyStats = completionsPerDay(logs: filtered, days: 7)
             monthlyStats = completionsPerDay(logs: filtered, days: 30)
+
+            habitStats = habits.map { habit in
+                let habitLogs = logs.filter { $0.habitId == habit.id }
+                var updated = habit
+                updated.currentStreak = StreakCalculator.currentStreak(
+                    from: habitLogs
+                )
+                updated.longestStreak = StreakCalculator.longestStreak(
+                    from: habitLogs
+                )
+                updated.totalCompletions = habitLogs.count
+                return updated
+            }
         } catch {
             self.error = .loadFailed(error)
             print(
