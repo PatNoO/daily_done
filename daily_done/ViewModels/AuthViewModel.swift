@@ -5,6 +5,8 @@ import Combine
 final class AuthViewModel: ObservableObject {
     @Published var isSignedIn: Bool = false
     @Published var userId: String?
+    @Published var email: String?
+    @Published var displayName: String?
     @Published var error: AuthError?
     @Published var isLoading: Bool = true
 
@@ -26,6 +28,8 @@ final class AuthViewModel: ObservableObject {
             for await user in service.authStatePublisher {
                 isSignedIn = user != nil
                 userId = user?.id
+                email = user?.email
+                displayName = user?.displayName
                 isLoading = false
             }
         }
