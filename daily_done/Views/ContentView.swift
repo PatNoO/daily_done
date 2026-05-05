@@ -1,27 +1,26 @@
 import SwiftUI
 
 struct ContentView: View {
-
-    @ObservedObject var authViewModel: AuthViewModel
-
+    let userId: String
+    @ObservedObject var auth: AuthViewModel
     var body: some View {
         TabView {
             NavigationStack {
-                HabitListView()
+                HabitListView(userId: userId)
             }
             .tabItem {
                 Label("Habits", systemImage: "checkmark.circle")
             }
 
             NavigationStack {
-                StatsView()
+                StatsView(userId: userId)
             }
             .tabItem {
                 Label("Stats", systemImage: "chart.bar")
             }
 
             NavigationStack {
-                ProfileView(vm: authViewModel)
+                ProfileView(vm: auth)
             }
             .tabItem {
                 Label("Profile", systemImage: "person.circle")
@@ -31,5 +30,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(authViewModel: AuthViewModel())
+    ContentView(userId: "preview-user", auth: AuthViewModel())
 }

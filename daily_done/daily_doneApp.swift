@@ -14,10 +14,19 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct daily_doneApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var auth = AuthViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView(authViewModel: authViewModel)
+            if auth.isLoading {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if auth.isSignedIn, let userId = auth.userId {
+                ContentView(userId: userId, auth: auth)
+                
+            } else {
+                SignInView(vm: auth)
+            }
         }
     }
 }

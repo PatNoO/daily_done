@@ -86,7 +86,7 @@ struct HabitListView: View {
 
 #Preview {
     NavigationStack {
-        HabitListView()
+        HabitListView(userId: "preview-user")
 
     }
 }
