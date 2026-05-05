@@ -9,8 +9,10 @@ final class HabitViewModel: ObservableObject {
     @Published var completedHabitIds: Set<String> = []
 
     private let service: FirebaseServiceProtocol
+    private let userId: String
 
-    init(service: FirebaseServiceProtocol? = nil) {
+    init(userId: String, service: FirebaseServiceProtocol? = nil) {
+        self.userId = userId
         self.service = service ?? FirebaseService.shared
     }
 
@@ -19,7 +21,7 @@ final class HabitViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            habits = try await service.fetchHabits(userId: "preview-user")
+            habits = try await service.fetchHabits(userId: userId)
         } catch let fetchError {
             error = .loadFailed(fetchError)
             print(
@@ -30,7 +32,7 @@ final class HabitViewModel: ObservableObject {
 
         do {
             let todayLogs = try await service.fetchTodayLogs(
-                userId: "preview-user"
+                userId: userId
             )
             completedHabitIds = Set(todayLogs.compactMap { $0.habitId })
         } catch let logError {
@@ -40,7 +42,7 @@ final class HabitViewModel: ObservableObject {
         }
 
         do {
-            let allLogs = try await service.fetchAllLogs(userId: "preview-user")
+            let allLogs = try await service.fetchAllLogs(userId: userId)
             refreshStreaks(from: allLogs)
         } catch let streakError {
             print(
@@ -76,7 +78,7 @@ final class HabitViewModel: ObservableObject {
         }
 
         let habit = Habit(
-            userId: "preview-user",  // Todo: updateras Auth () id senare
+            userId: userId,
             name: trimmedName,
             category: category,
             colorHex: colorHex,

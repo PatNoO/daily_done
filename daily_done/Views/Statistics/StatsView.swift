@@ -1,9 +1,11 @@
 import SwiftUI
 
 struct StatsView: View {
-    //    @StateObject private var vm = StatsViewModel()
-    init(service: FirebaseServiceProtocol? = nil) {
-        _vm = StateObject(wrappedValue: StatsViewModel(service: service))
+
+    init(userId: String, service: FirebaseServiceProtocol? = nil) {
+        _vm = StateObject(
+            wrappedValue: StatsViewModel(userId: userId, service: service)
+        )
     }
     @StateObject private var vm: StatsViewModel
 
@@ -127,7 +129,7 @@ private struct HabitStreakRow: View {
 
 #Preview {
     NavigationStack {
-        StatsView()
+        StatsView(userId: "preview-user")
     }
 }
 // Mock service that returns fake logs — no Firebase needed
@@ -196,6 +198,6 @@ private struct MockFirebaseService: FirebaseServiceProtocol {
 
 #Preview("Stats — with data") {
     NavigationStack {
-        StatsView(service: MockFirebaseService())
+        StatsView(userId: "preview-user", service: MockFirebaseService())
     }
 }

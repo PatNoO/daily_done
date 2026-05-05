@@ -1,8 +1,12 @@
 import SwiftUI
 
 struct HabitListView: View {
-    @StateObject private var vm = HabitViewModel()
-    @State private var showCreateSheet = false
+    @StateObject private var vm: HabitViewModel
+      @State private var showCreateSheet = false
+
+      init(userId: String) {
+          _vm = StateObject(wrappedValue: HabitViewModel(userId: userId))
+      }
 
     var body: some View {
         contentView
@@ -82,7 +86,7 @@ struct HabitListView: View {
 
 #Preview {
     NavigationStack {
-        HabitListView()
+        HabitListView(userId: "preview-user")
 
     }
 }
