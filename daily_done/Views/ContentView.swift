@@ -1,6 +1,9 @@
 import SwiftUI
 
 struct ContentView: View {
+
+    @ObservedObject var authViewModel: AuthViewModel
+
     var body: some View {
         TabView {
             NavigationStack {
@@ -9,17 +12,16 @@ struct ContentView: View {
             .tabItem {
                 Label("Habits", systemImage: "checkmark.circle")
             }
-            
-            NavigationStack{
+
+            NavigationStack {
                 StatsView()
             }
             .tabItem {
                 Label("Stats", systemImage: "chart.bar")
             }
-            
+
             NavigationStack {
-                Text("Profile View Coming Soon")
-                    .navigationTitle(Text("Settings"))
+                ProfileView(vm: authViewModel)
             }
             .tabItem {
                 Label("Profile", systemImage: "person.circle")
@@ -29,5 +31,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(authViewModel: AuthViewModel())
 }

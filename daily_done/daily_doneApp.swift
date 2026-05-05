@@ -14,9 +14,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct daily_doneApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject private var authViewModel = AuthViewModel()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(authViewModel: authViewModel)
         }
     }
 }
