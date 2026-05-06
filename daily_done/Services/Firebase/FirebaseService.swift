@@ -4,7 +4,11 @@ import Foundation
 protocol FirebaseServiceProtocol {
     func fetchHabits(userId: String) async throws -> [Habit]
     func createHabit(_ habit: Habit) async throws -> String
-    func habitLogComplition(habitId: String, userId: String) async throws
+    func habitLogComplition(
+        habitId: String,
+        userId: String,
+        location: HabitLocation?
+    ) async throws
     func fetchTodayLogs(userId: String) async throws -> [HabitLog]
     func fetchAllLogs(userId: String) async throws -> [HabitLog]
     func deleteHabit(habitId: String, userId: String) async throws
@@ -39,14 +43,18 @@ actor FirebaseService: FirebaseServiceProtocol {
         return ref.documentID
     }
 
-    func habitLogComplition(habitId: String, userId: String) async throws {
+    func habitLogComplition(
+        habitId: String,
+        userId: String,
+        location: HabitLocation?
+    ) async throws {
 
         let log = HabitLog(
             id: UUID().uuidString,
             habitId: habitId,
             userId: userId,
             completedAt: Date(),
-            location: nil
+            location: location
         )
         let ref = db.collection("habitLogs").document()
         let data = try await MainActor.run {
