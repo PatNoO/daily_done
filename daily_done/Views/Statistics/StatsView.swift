@@ -146,7 +146,9 @@ private struct MockFirebaseService: FirebaseServiceProtocol {
                 createdAt: Date(),
                 currentStreak: 0,
                 longestStreak: 0,
-                totalCompletions: 0
+                totalCompletions: 0,
+                isReminderEnabled: false,
+                reminderTime: nil
             ),
             Habit(
                 id: "habit-2",
@@ -158,11 +160,13 @@ private struct MockFirebaseService: FirebaseServiceProtocol {
                 createdAt: Date(),
                 currentStreak: 0,
                 longestStreak: 0,
-                totalCompletions: 0
+                totalCompletions: 0,
+                isReminderEnabled: false,
+                reminderTime: nil
             ),
         ]
     }
-    func createHabit(_ habit: Habit) async throws {}
+    func createHabit(_ habit: Habit) async throws -> String { "" }
     func habitLogComplition(habitId: String, userId: String) async throws {}
     func fetchTodayLogs(userId: String) async throws -> [HabitLog] { [] }
     func deleteHabit(habitId: String, userId: String) async throws {}
