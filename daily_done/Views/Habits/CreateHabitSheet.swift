@@ -219,7 +219,7 @@ struct CreateHabitSheet: View {
                 isReminderEnabled: reminderEnabled,
                 reminderTime: reminderEnabled ? reminderTime : nil
             )
-            notificationVM.scheduleIfEnabled(for: saved)
+            await notificationVM.scheduleIfEnabled(for: saved)
             dismiss()
 
         } catch HabitViewModel.HabitError.nameMissing {
