@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CreateHabitSheet: View {
     @ObservedObject var vm: HabitViewModel
+    @StateObject private var notificationVM = NotificationViewModel()
     @Environment(\.dismiss) private var dismiss
 
     @State private var name = ""
@@ -9,6 +10,7 @@ struct CreateHabitSheet: View {
     @State private var selectedColorHex = DesignSystem.HabitPalette.colors[0]
     @State private var selectedIcon = DesignSystem.HabitPalette.icons[0]
     @State private var reminderEnabled = false
+    @State private var reminderTime = Date()
     @State private var nameError: String?
     @State private var saveError: String?
     @State private var isSaving = false
@@ -153,24 +155,52 @@ struct CreateHabitSheet: View {
     }
 
     private var reminderSection: some View {
-        HStack(spacing: DesignSystem.Spacing.base) {
-            Image(systemName: "bell")
-                .foregroundStyle(Color("textSecondary"))
-            VStack(alignment: .leading, spacing: DesignSystem.Spacing.xxs) {
-                Text("Reminder")
-                    .font(.body)
-                    .foregroundStyle(Color("textPrimary"))
-                Text("Set a daily reminder")
-                    .font(.caption)
+        VStack(spacing: 0) {
+            HStack(spacing: DesignSystem.Spacing.base) {
+                Image(systemName: "bell")
                     .foregroundStyle(Color("textSecondary"))
+                VStack(alignment: .leading, spacing: DesignSystem.Spacing.xxs) {
+                    Text("Reminder")
+                        .font(.body)
+                        .foregroundStyle(Color("textPrimary"))
+                    Text("Set a daily reminder")
+                        .font(.caption)
+                        .foregroundStyle(Color("textSecondary"))
+                }
+                Spacer()
+                Toggle("", isOn: $reminderEnabled)
+                    .labelsHidden()
+                    .tint(Color("brandPrimary"))
+                    .onChange(of: reminderEnabled) { _, isOn in
+                        guard isOn else { return }
+                        Task {
+                            let granted =
+                                await notificationVM.requestPermission()
+                            if !granted { reminderEnabled = false }
+                        }
+                    }
             }
-            Spacer()
-            // TODO: Implementera NotificationService kommer i DD-009
-            Toggle("", isOn: $reminderEnabled)
+            .padding(DesignSystem.Spacing.base)
+
+            if reminderEnabled {
+                Divider()
+                DatePicker(
+                    "Reminder time",
+                    selection: $reminderTime,
+                    displayedComponents: .hourAndMinute
+                )
+                .datePickerStyle(.wheel)
                 .labelsHidden()
-                .tint(Color("brandPrimary"))
+                .padding(.horizontal, DesignSystem.Spacing.base)
+            }
+
+            if notificationVM.permissionDenied {
+                Text("Enable notifications in Settings to use reminders.")
+                    .font(.caption)
+                    .foregroundStyle(Color("destructive"))
+                    .padding([.horizontal, .bottom], DesignSystem.Spacing.base)
+            }
         }
-        .padding(DesignSystem.Spacing.base)
         .background(Color("backgroundSecondary"))
         .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.md))
     }
@@ -181,12 +211,15 @@ struct CreateHabitSheet: View {
         saveError = nil
         defer { isSaving = false }
         do {
-            try await vm.createHabit(
+            let saved = try await vm.createHabit(
                 name: name,
                 category: selectedCategory,
                 colorHex: selectedColorHex,
-                iconName: selectedIcon
+                iconName: selectedIcon,
+                isReminderEnabled: reminderEnabled,
+                reminderTime: reminderEnabled ? reminderTime : nil
             )
+            notificationVM.scheduleIfEnabled(for: saved)
             dismiss()
 
         } catch HabitViewModel.HabitError.nameMissing {
