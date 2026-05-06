@@ -8,12 +8,18 @@ final class HabitViewModel: ObservableObject {
     @Published var error: HabitError?
     @Published var completedHabitIds: Set<String> = []
 
-    private let service: FirebaseServiceProtocol
     private let userId: String
+    private let service: FirebaseServiceProtocol
+    private let notificationService: NotificationServiceProtocol
 
-    init(userId: String, service: FirebaseServiceProtocol? = nil) {
+    init(
+        userId: String,
+        service: FirebaseServiceProtocol? = nil,
+        notificationService: NotificationServiceProtocol? = nil
+    ) {
         self.userId = userId
         self.service = service ?? FirebaseService.shared
+        self.notificationService = notificationService ?? NotificationService.shared
     }
 
     func loadHabits() async {
@@ -122,6 +128,10 @@ final class HabitViewModel: ObservableObject {
         guard let habitId = habit.id else { return }
 
         habits.removeAll { $0.id == habitId }
+
+        if habit.isReminderEnabled {
+            notificationService.cancelReminder(habitId: habitId)
+        }
 
         do {
             try await service.deleteHabit(

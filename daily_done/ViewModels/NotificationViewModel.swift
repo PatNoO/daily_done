@@ -5,9 +5,9 @@ import Combine
 final class NotificationViewModel: ObservableObject {
     @Published var permissionDenied = false
     
-    private let service: NotificationService
-    
-    init (service: NotificationService? = nil ) {
+    private let service: NotificationServiceProtocol
+
+    init(service: NotificationServiceProtocol? = nil) {
         self.service = service ?? NotificationService.shared
     }
     
@@ -17,8 +17,8 @@ final class NotificationViewModel: ObservableObject {
         return granted
     }
     
-    func scheduleIfEnabled(for habit: Habit) {
-          service.scheduleReminder(for: habit)
+    func scheduleIfEnabled(for habit: Habit) async {
+          await service.scheduleReminder(for: habit)
       }
 
       func cancelReminder(habitId: String) {
