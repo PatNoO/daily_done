@@ -15,7 +15,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct daily_doneApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject private var auth = AuthViewModel()
-    
+    @State private var splashDissmised = false
+
     var body: some Scene {
         WindowGroup {
             if auth.isLoading {
@@ -23,7 +24,9 @@ struct daily_doneApp: App {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if auth.isSignedIn, let userId = auth.userId {
                 ContentView(userId: userId, auth: auth)
-                
+
+            } else if !splashDissmised {
+                SplashView(onGetStarted: { splashDissmised = true })
             } else {
                 SignInView(vm: auth)
             }
