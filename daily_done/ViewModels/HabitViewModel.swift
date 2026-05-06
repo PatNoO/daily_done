@@ -11,15 +11,18 @@ final class HabitViewModel: ObservableObject {
     private let userId: String
     private let service: FirebaseServiceProtocol
     private let notificationService: NotificationServiceProtocol
+    private let locationService: LocationServiceProtocol
 
     init(
         userId: String,
         service: FirebaseServiceProtocol? = nil,
-        notificationService: NotificationServiceProtocol? = nil
+        notificationService: NotificationServiceProtocol? = nil,
+        locationService: LocationServiceProtocol? = nil
     ) {
         self.userId = userId
         self.service = service ?? FirebaseService.shared
         self.notificationService = notificationService ?? NotificationService.shared
+        self.locationService = locationService ?? LocationService.shared
     }
 
     func loadHabits() async {
@@ -109,11 +112,14 @@ final class HabitViewModel: ObservableObject {
         guard let habitId = habit.id else { return }
         guard !completedHabitIds.contains(habitId) else { return }
         completedHabitIds.insert(habitId)
+        
+        let location = await locationService.currentLocation()
 
         do {
             try await service.habitLogComplition(
                 habitId: habitId,
-                userId: habit.userId
+                userId: habit.userId,
+                location: location
             )
         } catch let saveError {
             completedHabitIds.remove(habitId)
