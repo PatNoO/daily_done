@@ -48,6 +48,8 @@ struct Habit: Identifiable, Codable, Hashable {
     var currentStreak: Int
     var longestStreak: Int
     var totalCompletions: Int
+    var isReminderEnabled: Bool
+    var reminderTime: Date?
 }
 
 extension Habit {
@@ -62,7 +64,9 @@ extension Habit {
             createdAt: Date(),
             currentStreak: 5,
             longestStreak: 12,
-            totalCompletions: 30
+            totalCompletions: 30,
+            isReminderEnabled: false,
+            reminderTime: nil
         )
     }
 }
