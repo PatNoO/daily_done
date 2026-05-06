@@ -167,7 +167,7 @@ private struct MockFirebaseService: FirebaseServiceProtocol {
         ]
     }
     func createHabit(_ habit: Habit) async throws -> String { "" }
-    func habitLogComplition(habitId: String, userId: String) async throws {}
+    func habitLogComplition(habitId: String, userId: String, location: HabitLocation?) async throws {}
     func fetchTodayLogs(userId: String) async throws -> [HabitLog] { [] }
     func deleteHabit(habitId: String, userId: String) async throws {}
 
