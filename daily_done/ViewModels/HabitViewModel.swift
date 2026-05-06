@@ -69,15 +69,17 @@ final class HabitViewModel: ObservableObject {
         name: String,
         category: HabitCategory,
         colorHex: String,
-        iconName: String
-    ) async throws {
+        iconName: String,
+        isReminderEnabled: Bool,
+        reminderTime: Date?
+    ) async throws -> Habit {
         let trimmedName = name.trimmingCharacters(in: .whitespaces)
         guard !trimmedName.isEmpty else {
             throw HabitError.nameMissing
 
         }
 
-        let habit = Habit(
+        var habit = Habit(
             userId: userId,
             name: trimmedName,
             category: category,
@@ -86,11 +88,15 @@ final class HabitViewModel: ObservableObject {
             createdAt: Date(),
             currentStreak: 0,
             longestStreak: 0,
-            totalCompletions: 0
+            totalCompletions: 0,
+            isReminderEnabled: isReminderEnabled,
+            reminderTime: reminderTime
 
         )
-        try await service.createHabit(habit)
+        let docId = try await service.createHabit(habit)
+        habit.id = docId
         habits.append(habit)
+        return habit
     }
 
     func toggleCompletion(for habit: Habit) async {
