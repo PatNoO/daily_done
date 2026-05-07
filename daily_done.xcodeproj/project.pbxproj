@@ -16,22 +16,9 @@
 		270BF9C12F9FED4900850F6F /* daily_done.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = daily_done.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		27CB5B982FAB730900A1D2D9 /* Exceptions for "daily_done" folder in "daily_done" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"daily-done-Info.plist",
-			);
-			target = 270BF9C02F9FED4900850F6F /* daily_done */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		270BF9C32F9FED4900850F6F /* daily_done */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				27CB5B982FAB730900A1D2D9 /* Exceptions for "daily_done" folder in "daily_done" target */,
-			);
 			path = daily_done;
 			sourceTree = "<group>";
 		};
@@ -281,7 +268,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "daily-done-Info.plist";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Daily Done logs where you completed your habit.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -314,7 +300,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "daily-done-Info.plist";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Daily Done logs where you completed your habit.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
