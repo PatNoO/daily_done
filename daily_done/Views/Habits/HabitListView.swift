@@ -131,30 +131,34 @@ struct HabitListView: View {
     }
 
     private var habitList: some View {
-        ScrollView {
-            LazyVStack(spacing: DesignSystem.Spacing.sm) {
-                ForEach(vm.habits) { habit in
-                    HabitRowView(
-                        habit: habit,
-                        isCompleted: vm.completedHabitIds.contains(
-                            habit.id ?? ""
-                        ),
-                        onToggle: {
-                            Task { await vm.toggleCompletion(for: habit) }
-                        }
-                    )
-                    .swipeActions(edge: .trailing) {
-                        Button(role: .destructive) {
-                            Task { await vm.deleteHabit(habit) }
-                        } label: {
-                            Label("Delete", systemImage: "trash")
-                        }
+        List {
+            ForEach(vm.habits) { habit in
+                HabitRowView(
+                    habit: habit,
+                    isCompleted: vm.completedHabitIds.contains(habit.id ?? ""),
+                    onToggle: {
+                        Task { await vm.toggleCompletion(for: habit) }
+                    }
+                )
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(
+                    top: DesignSystem.Spacing.xs,
+                    leading: DesignSystem.Spacing.base,
+                    bottom: DesignSystem.Spacing.xs,
+                    trailing: DesignSystem.Spacing.base
+                ))
+                .swipeActions(edge: .trailing) {
+                    Button(role: .destructive) {
+                        Task { await vm.deleteHabit(habit) }
+                    } label: {
+                        Label("Delete", systemImage: "trash")
                     }
                 }
             }
-            .padding(.horizontal, DesignSystem.Spacing.base)
-            .padding(.bottom, 100)
         }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
     }
 
 

@@ -8,7 +8,11 @@ enum StreakCalculator {
 
         var streak = 0
 
-        var expectedDay = Calendar.current.startOfDay(for: Date())
+        let today = Calendar.current.startOfDay(for: Date())
+        let completedToday = days.first == today
+        var expectedDay = completedToday
+            ? today
+            : Calendar.current.date(byAdding: .day, value: -1, to: today)!
 
         for day in days {
             if day == expectedDay {
