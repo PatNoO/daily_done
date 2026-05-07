@@ -1,10 +1,14 @@
 import CoreLocation
 import Foundation
 
+// MARK: - Protocol
+
 protocol LocationServiceProtocol {
     func requestPermission() async -> Bool
     func currentLocation() async -> HabitLocation?
 }
+
+// MARK: - Service
 
 @MainActor
 final class LocationService: NSObject, LocationServiceProtocol {
@@ -19,6 +23,8 @@ final class LocationService: NSObject, LocationServiceProtocol {
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
     }
+
+    // MARK: - Actions
 
     func requestPermission() async -> Bool {
         switch manager.authorizationStatus {
@@ -46,6 +52,8 @@ final class LocationService: NSObject, LocationServiceProtocol {
         }
     }
 }
+
+// MARK: - CLLocationManagerDelegate
 
 extension LocationService: CLLocationManagerDelegate {
     nonisolated func locationManager(
