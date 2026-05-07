@@ -116,7 +116,7 @@ final class HabitViewModel: ObservableObject {
         let location = await locationService.currentLocation()
 
         do {
-            try await service.habitLogComplition(
+            try await service.habitLogCompletion(
                 habitId: habitId,
                 userId: habit.userId,
                 location: location
