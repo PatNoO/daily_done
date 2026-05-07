@@ -1,5 +1,5 @@
-import Foundation
 import Combine
+import Foundation
 
 @MainActor
 final class AuthViewModel: ObservableObject {
@@ -35,6 +35,21 @@ final class AuthViewModel: ObservableObject {
         }
     }
 
+    func signUp(email: String, password: String, displayName: String) async {
+        error = nil
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            try await service.createUser(
+                email: email,
+                password: password,
+                displayName: displayName
+            )
+        } catch {
+            self.error = .signUpFailed(error)
+        }
+    }
+
     func signIn(email: String, password: String) async {
         error = nil
         isLoading = true
@@ -62,6 +77,7 @@ extension AuthViewModel {
     enum AuthError: LocalizedError {
         case signInFailed(Error)
         case signOutFailed(Error)
+        case signUpFailed(Error)
 
         var errorDescription: String? {
             switch self {
@@ -69,6 +85,8 @@ extension AuthViewModel {
                 return "Could not sign in. Check your email and password."
             case .signOutFailed:
                 return "Could not sign out. Please try again."
+            case .signUpFailed(let error):
+                return "Could not create account. \(error.localizedDescription)"
             }
         }
     }
