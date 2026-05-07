@@ -6,8 +6,8 @@ struct SignInView: View {
 
     @State private var email = ""
     @State private var password = ""
+    @State private var showSignUp = false
 
-   
     @FocusState private var focusedField: Field?
 
     private enum Field { case email, password }
@@ -37,7 +37,7 @@ struct SignInView: View {
                     .padding(.bottom, 32)
             }
         }
-        
+
         .alert(
             "Sign In Failed",
             isPresented: Binding(
@@ -50,7 +50,6 @@ struct SignInView: View {
             Text(vm.error?.localizedDescription ?? "")
         }
     }
-
 
     private var logoSection: some View {
         VStack(spacing: 16) {
@@ -95,7 +94,6 @@ struct SignInView: View {
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
-
     private var passwordField: some View {
         HStack(spacing: 12) {
             Image(systemName: "lock")
@@ -115,17 +113,16 @@ struct SignInView: View {
     private var forgotPasswordLink: some View {
         HStack {
             Spacer()
-            Button("Forgot password?") { }
+            Button("Forgot password?") {}
                 // TODO: implement forgot password flow later ticket
                 .font(.caption)
                 .foregroundStyle(Color("brandPrimary"))
         }
     }
 
-  
     private var signInButton: some View {
         Button {
-           
+
             Task { await signIn() }
         } label: {
             HStack(spacing: 8) {
@@ -159,10 +156,14 @@ struct SignInView: View {
             Text("Don't have an account?")
                 .font(.caption)
                 .foregroundStyle(Color("textSecondary"))
-            Button("Sign Up") { }
-                // TODO: navigate to sign-up screen
+            Button("Sign Up") { showSignUp = true }
                 .font(.caption)
                 .foregroundStyle(Color("brandPrimary"))
+                .font(.caption)
+                .foregroundStyle(Color("brandPrimary"))
+        }
+        .sheet(isPresented: $showSignUp ) {
+            SignInView(vm: vm)
         }
     }
 
