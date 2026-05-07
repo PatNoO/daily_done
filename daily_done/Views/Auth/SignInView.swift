@@ -144,7 +144,7 @@ struct SignInView: View {
                 )
             )
             .clipShape(RoundedRectangle(cornerRadius: 14))
-
+            .shadow(color: Color("brandPrimary").opacity(0.45), radius: 12, x: 0, y: 4)
             .opacity(email.isEmpty || password.isEmpty ? 0.6 : 1.0)
         }
 
@@ -159,11 +159,9 @@ struct SignInView: View {
             Button("Sign Up") { showSignUp = true }
                 .font(.caption)
                 .foregroundStyle(Color("brandPrimary"))
-                .font(.caption)
-                .foregroundStyle(Color("brandPrimary"))
         }
-        .sheet(isPresented: $showSignUp ) {
-            SignInView(vm: vm)
+        .sheet(isPresented: $showSignUp) {
+            SignUpView(vm: vm)
         }
     }
 

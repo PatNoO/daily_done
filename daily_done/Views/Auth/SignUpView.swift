@@ -170,12 +170,9 @@ struct SignUpView: View {
             .padding(.vertical, 16)
             .background(
                 LinearGradient(
-                    colors: [
-                        Color("brandPrimary"),
-                        Color("brandPrimary").opacity(0.7),
-                    ],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
+                    colors: [Color("brandPrimary"), Color("brandAccent")],
+                    startPoint: .leading,
+                    endPoint: .trailing
                 )
             )
             .clipShape(RoundedRectangle(cornerRadius: 14))
