@@ -2,7 +2,7 @@ import Combine
 import CoreLocation
 import Foundation
 
-struct HabitLogAnnoation: Identifiable {
+struct HabitLogAnnotation: Identifiable {
     let id: String
     let habitId: String
     let habitName: String
@@ -13,9 +13,9 @@ struct HabitLogAnnoation: Identifiable {
 @MainActor
 final class MapViewModel: ObservableObject {
     @Published var habits: [Habit] = []
-    @Published var allAnnotations: [HabitLogAnnoation]
+    @Published var annotations: [HabitLogAnnotation] = []
     @Published var selectedHabitId: String? = nil
-    @Published var isloading = false
+    @Published var isLoading = false
     @Published var error: String? = nil
 
     private let userId: String
@@ -26,14 +26,14 @@ final class MapViewModel: ObservableObject {
         self.service = service ?? FirebaseService.shared
     }
 
-    var filteredAnnnotations: [HabitLogAnnoation] {
-        guard let id = selectedHabitId else { return allAnnotations }
-        return allAnnotations.filter { $0.habitId == id }
+    var filteredAnnotations: [HabitLogAnnotation] {
+        guard let id = selectedHabitId else { return annotations }
+        return annotations.filter { $0.habitId == id }
     }
 
     func load() async {
-        isloading = true
-        defer { isloading = false }
+        isLoading = true
+        defer { isLoading = false }
 
         do {
             async let fetchedHabits = try service.fetchHabits(userId: userId)
@@ -50,12 +50,12 @@ final class MapViewModel: ObservableObject {
                 }
             )
 
-            allAnnotations = logs.compactMap { log -> HabitLogAnnoation? in
+            annotations = logs.compactMap { log -> HabitLogAnnotation? in
                 guard let loc = log.location,
                     let logId = log.id
                 else { return nil }
                 let name = nameById[log.habitId] ?? "Unknown Habit"
-                return HabitLogAnnoation(
+                return HabitLogAnnotation(
                     id: logId,
                     habitId: log.habitId,
                     habitName: name,
