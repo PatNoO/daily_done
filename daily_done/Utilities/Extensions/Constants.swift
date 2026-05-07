@@ -25,16 +25,27 @@ enum DesignSystem {
     }
 
     enum Size {
+        static let microLabel: CGFloat = 8
+        static let habitRowIcon: CGFloat = 18
         static let iconSmall: CGFloat = 20
         static let authIconHeader: CGFloat = 26
+        static let colorSwatch: CGFloat = 36
         static let splashFlame: CGFloat = 40
+        static let habitIcon: CGFloat = 44
+        static let iconPickerTile: CGFloat = 52
+        static let progressRing: CGFloat = 52
+        static let settingsRowInset: CGFloat = 52
+        static let fab: CGFloat = 56
         static let avatarInner: CGFloat = 60
         static let avatar: CGFloat = 80
         static let logoCircle: CGFloat = 96
-        static let progressRing: CGFloat = 52
-        static let habitIcon: CGFloat = 44
-        static let fab: CGFloat = 56
         static let chartHeight: CGFloat = 200
+    }
+
+    enum Stroke {
+        static let thin: CGFloat = 1
+        static let selection: CGFloat = 3
+        static let ring: CGFloat = 5
     }
 
     enum Animation {
@@ -44,15 +55,19 @@ enum DesignSystem {
     }
 
     enum Opacity {
+        static let tintedBackground: Double = 0.15
         static let avatarOuter: Double = 0.2
         static let headerGradient: Double = 0.25
         static let splashGradient: Double = 0.3
+        static let shadowFab: Double = 0.4
+        static let shadowBrand: Double = 0.45
         static let subtle: Double = 0.5
         static let avatarInner: Double = 0.55
+        static let avatarFill: Double = 0.6
+        static let disabled: Double = 0.6
+        static let tintedBorder: Double = 0.4
         static let completedRow: Double = 0.65
         static let errorStroke: Double = 0.7
-        static let disabled: Double = 0.6
-        static let shadowBrand: Double = 0.45
         static let logoFill: Double = 0.9
     }
 

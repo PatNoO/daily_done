@@ -49,6 +49,8 @@ struct CreateHabitSheet: View {
             }
         }
     }
+    
+    // MARK: - Name
 
     private var nameSection: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
@@ -69,6 +71,8 @@ struct CreateHabitSheet: View {
             }
         }
     }
+    
+    // MARK: - Category
 
     private var categorySection: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
@@ -99,6 +103,8 @@ struct CreateHabitSheet: View {
             }
         }
     }
+    
+    // MARK: - Color
 
     private var colorSection: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
@@ -109,12 +115,12 @@ struct CreateHabitSheet: View {
                 ForEach(DesignSystem.HabitPalette.colors, id: \.self) { hex in
                     Circle()
                         .fill(Color(hex: hex))
-                        .frame(width: 36, height: 36)
+                        .frame(width: DesignSystem.Size.colorSwatch, height: DesignSystem.Size.colorSwatch)
                         .overlay {
                             if selectedColorHex == hex {
                                 Circle().strokeBorder(
                                     Color("textPrimary"),
-                                    lineWidth: 3
+                                    lineWidth: DesignSystem.Stroke.selection
                                 )
                             }
                         }
@@ -124,6 +130,8 @@ struct CreateHabitSheet: View {
         }
 
     }
+    
+    // MARK: - Icon
 
     private var iconSection: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
@@ -139,7 +147,7 @@ struct CreateHabitSheet: View {
                                     ? Color(hex: selectedColorHex)
                                     : Color("backgroundSecondary")
                             )
-                            .frame(width: 52, height: 52)
+                            .frame(width: DesignSystem.Size.iconPickerTile, height: DesignSystem.Size.iconPickerTile)
                         Image(systemName: icon)
                             .font(.title3)
                             .foregroundStyle(
@@ -153,6 +161,8 @@ struct CreateHabitSheet: View {
             }
         }
     }
+    
+    // MARK: - Reminder
 
     private var reminderSection: some View {
         VStack(spacing: 0) {
@@ -204,6 +214,8 @@ struct CreateHabitSheet: View {
         .background(Color("backgroundSecondary"))
         .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.md))
     }
+    
+    // MARK: - Save
 
     private func save() async {
         nameError = nil

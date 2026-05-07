@@ -16,20 +16,24 @@ struct HabitRowView: View {
         .padding(DesignSystem.Spacing.base)
         .background(Color("backgroundSecondary"))
         .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.lg))
-        .opacity(isCompleted ? 0.65 : 1.0)
-        .animation(.easeInOut(duration: 0.2), value: isCompleted)
+        .opacity(isCompleted ? DesignSystem.Opacity.completedRow : 1.0)
+        .animation(.easeInOut(duration: DesignSystem.Animation.standard), value: isCompleted)
     }
+
+    // MARK: - Icon
 
     private var iconView: some View {
         RoundedRectangle(cornerRadius: DesignSystem.Radius.sm)
             .fill(Color(hex: habit.colorHex))
-            .frame(width: 44, height: 44)
+            .frame(width: DesignSystem.Size.habitIcon, height: DesignSystem.Size.habitIcon)
             .overlay(
                 Image(systemName: habit.iconName)
                     .foregroundStyle(.white)
-                    .font(.system(size: 18, weight: .medium))
+                    .font(.system(size: DesignSystem.Size.habitRowIcon, weight: .medium))
             )
     }
+
+    // MARK: - Info
 
     private var infoView: some View {
         VStack(alignment: .leading, spacing: DesignSystem.Spacing.xs) {
@@ -57,6 +61,8 @@ struct HabitRowView: View {
         .clipShape(Capsule())
     }
 
+    // MARK: - Streak
+
     private var streakView: some View {
         HStack(spacing: DesignSystem.Spacing.xxs) {
             Image(systemName: "flame.fill")
@@ -68,6 +74,8 @@ struct HabitRowView: View {
         }
     }
 
+    // MARK: - Check Button
+
     private var checkButton: some View {
         Button(action: onToggle) {
             Image(systemName: isCompleted ? "checkmark.circle.fill" : "circle")
@@ -75,7 +83,7 @@ struct HabitRowView: View {
                 .foregroundStyle(
                     isCompleted ? Color("success") : Color("textSecondary")
                 )
-                .animation(.easeInOut(duration: 0.15), value: isCompleted)
+                .animation(.easeInOut(duration: DesignSystem.Animation.fast), value: isCompleted)
         }
         .disabled(isCompleted)
         .buttonStyle(.plain)

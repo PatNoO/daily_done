@@ -28,6 +28,9 @@ struct StatsView: View {
                 Text(vm.error?.errorDescription ?? "")
             }
     }
+
+    // MARK: - Content
+
     @ViewBuilder
     private var contentView: some View {
         if vm.isLoading {
@@ -87,6 +90,8 @@ struct StatsView: View {
     }
 }
 
+// MARK: - Habit Streak Row
+
 private struct HabitStreakRow: View {
     let habit: Habit
 
@@ -94,11 +99,11 @@ private struct HabitStreakRow: View {
         HStack(spacing: DesignSystem.Spacing.base) {
             Circle()
                 .fill(Color(hex: habit.colorHex))
-                .frame(width: 36, height: 36)
+                .frame(width: DesignSystem.Size.colorSwatch, height: DesignSystem.Size.colorSwatch)
                 .overlay(
                     Image(systemName: habit.iconName)
                         .foregroundStyle(.white)
-                        .font(.system(size: 16, weight: .medium))
+                        .font(.callout.weight(.medium))
                 )
 
             VStack(alignment: .leading, spacing: DesignSystem.Spacing.xxs) {
@@ -121,17 +126,21 @@ private struct HabitStreakRow: View {
         }
         .padding(DesignSystem.Spacing.md)
         .background(
-            Color("neutral-light").opacity(0.5),
+            Color("neutral-light").opacity(DesignSystem.Opacity.subtle),
             in: RoundedRectangle(cornerRadius: DesignSystem.Radius.md)
         )
     }
 }
+
+// MARK: - Previews
 
 #Preview {
     NavigationStack {
         StatsView(userId: "preview-user")
     }
 }
+
+#if DEBUG
 // Mock service that returns fake logs — no Firebase needed
 private struct MockFirebaseService: FirebaseServiceProtocol {
     func fetchHabits(userId: String) async throws -> [Habit] {
@@ -141,7 +150,7 @@ private struct MockFirebaseService: FirebaseServiceProtocol {
                 userId: userId,
                 name: "Morning Run",
                 category: .fitness,
-                colorHex: "#FF6B35",
+                colorHex: DesignSystem.HabitPalette.orange,
                 iconName: "figure.run",
                 createdAt: Date(),
                 currentStreak: 0,
@@ -155,7 +164,7 @@ private struct MockFirebaseService: FirebaseServiceProtocol {
                 userId: userId,
                 name: "Read 20 min",
                 category: .learning,
-                colorHex: "#7B61FF",
+                colorHex: DesignSystem.HabitPalette.violet,
                 iconName: "book.fill",
                 createdAt: Date(),
                 currentStreak: 0,
@@ -167,7 +176,7 @@ private struct MockFirebaseService: FirebaseServiceProtocol {
         ]
     }
     func createHabit(_ habit: Habit) async throws -> String { "" }
-    func habitLogComplition(habitId: String, userId: String, location: HabitLocation?) async throws {}
+    func habitLogCompletion(habitId: String, userId: String, location: HabitLocation?) async throws {}
     func fetchTodayLogs(userId: String) async throws -> [HabitLog] { [] }
     func deleteHabit(habitId: String, userId: String) async throws {}
 
@@ -199,6 +208,7 @@ private struct MockFirebaseService: FirebaseServiceProtocol {
         }
     }
 }
+#endif
 
 #Preview("Stats — with data") {
     NavigationStack {

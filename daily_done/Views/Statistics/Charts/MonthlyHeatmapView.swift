@@ -4,18 +4,22 @@ struct MonthlyHeatmapView: View {
     let stats: [DayStat]
 
     private let columns = Array(
-        repeating: GridItem(.flexible(), spacing: 4),
+        repeating: GridItem(.flexible(), spacing: DesignSystem.Spacing.xs),
         count: 7
     )
+
+
+    private let heatmapMinOpacity: Double = 0.25
+    private let heatmapOpacityRange: Double = 0.75
 
     private var maxCount: Int {
         stats.map(\.count).max() ?? 1
     }
 
     var body: some View {
-        LazyVGrid(columns: columns, spacing: 4) {
+        LazyVGrid(columns: columns, spacing: DesignSystem.Spacing.xs) {
             ForEach(paddedDays) { entry in
-                RoundedRectangle(cornerRadius: 4)
+                RoundedRectangle(cornerRadius: DesignSystem.Radius.xs)
                     .fill(cellColor(for: entry))
                     .aspectRatio(1, contentMode: .fit)
                     .accessibilityLabel(entry.label)
@@ -23,6 +27,8 @@ struct MonthlyHeatmapView: View {
             }
         }
     }
+
+    // MARK: - Layout
 
     private var paddedDays: [GridCell] {
         let calendar = Calendar.current
@@ -33,8 +39,9 @@ struct MonthlyHeatmapView: View {
             return []
         }
 
-        let iOSWeekday = calendar.component(.weekday, from: firstOfMonth)
-        let startOffset = (iOSWeekday + 5) % 7
+       
+        let firstWeekdayOfMonth = calendar.component(.weekday, from: firstOfMonth)
+        let startOffset = (firstWeekdayOfMonth + 5) % 7
 
         var cells: [GridCell] = []
 
@@ -50,6 +57,8 @@ struct MonthlyHeatmapView: View {
         return cells
     }
 
+    // MARK: - Cell Color
+
     private func cellColor(for entry: GridCell) -> Color {
         guard entry.date != nil else {
             return Color.clear
@@ -58,9 +67,11 @@ struct MonthlyHeatmapView: View {
             return Color("neutral-light").opacity(0.5)
         }
         let intensity = Double(entry.count) / Double(max(maxCount, 1))
-        return Color("brandPrimary").opacity(0.25 + intensity * 0.75)
+        return Color("brandPrimary").opacity(heatmapMinOpacity + intensity * heatmapOpacityRange) // ← DD-040: was 0.25 + intensity * 0.75
     }
 }
+
+// MARK: - Grid Cell
 
 private struct GridCell: Identifiable {
     let id = UUID()

@@ -17,7 +17,7 @@ struct MapView: View {
         }
         .navigationTitle("Habit Map")
         .navigationBarTitleDisplayMode(.inline)
-        .task { await vm.load() }
+        .task { await vm.loadNearbyHabits() }
         .sheet(item: $selectedAnnotation) { annotation in
             annotationDetail(annotation)
                 .presentationDetents([.fraction(0.3)])
@@ -41,6 +41,7 @@ struct MapView: View {
         }
     }
 
+    // MARK: - Map Layer
 
     private var mapLayer: some View {
         Map {
@@ -57,16 +58,18 @@ struct MapView: View {
         .ignoresSafeArea(edges: .bottom)
     }
 
+    // MARK: - Filter Chips
+
     private var filterChipBar: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
+            HStack(spacing: DesignSystem.Spacing.sm) {
                 habitChip(label: "All", id: nil)
                 ForEach(vm.habits) { habit in
                     habitChip(label: habit.name, id: habit.id)
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
+            .padding(.horizontal, DesignSystem.Spacing.base)
+            .padding(.vertical, DesignSystem.Spacing.sm)
         }
         .background(.ultraThinMaterial)
     }
@@ -79,16 +82,18 @@ struct MapView: View {
             Text(label)
                 .font(.caption)
                 .fontWeight(isSelected ? .semibold : .regular)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
+                .padding(.horizontal, DesignSystem.Spacing.md)
+                .padding(.vertical, DesignSystem.Spacing.sm)
                 .background(isSelected ? Color("brandPrimary") : Color(.systemGray5))
                 .foregroundStyle(isSelected ? .white : .primary)
                 .clipShape(Capsule())
         }
     }
 
+    // MARK: - Annotation Detail
+
     private func annotationDetail(_ item: HabitLogAnnotation) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
             Text(item.habitName)
                 .font(.headline)
             Text(item.completedAt.formatted(date: .long, time: .shortened))
@@ -96,9 +101,11 @@ struct MapView: View {
                 .foregroundStyle(.secondary)
             Spacer()
         }
-        .padding(24)
+        .padding(DesignSystem.Spacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
+
+    // MARK: - Empty States
 
     private var emptyFilterState: some View {
         ContentUnavailableView(
@@ -131,7 +138,7 @@ private struct MockMapService: FirebaseServiceProtocol {
                 userId: userId,
                 name: "Morning Run",
                 category: .fitness,
-                colorHex: "#FF6B35",
+                colorHex: DesignSystem.HabitPalette.orange,
                 iconName: "figure.run",
                 createdAt: Date(),
                 currentStreak: 5,
@@ -145,7 +152,7 @@ private struct MockMapService: FirebaseServiceProtocol {
                 userId: userId,
                 name: "Read 20 min",
                 category: .learning,
-                colorHex: "#7B61FF",
+                colorHex: DesignSystem.HabitPalette.violet,
                 iconName: "book.fill",
                 createdAt: Date(),
                 currentStreak: 3,
@@ -159,7 +166,7 @@ private struct MockMapService: FirebaseServiceProtocol {
                 userId: userId,
                 name: "Meditate",
                 category: .mindfulness,
-                colorHex: "#2E9E6E",
+                colorHex: DesignSystem.HabitPalette.emerald,
                 iconName: "brain.head.profile",
                 createdAt: Date(),
                 currentStreak: 1,
@@ -193,7 +200,7 @@ private struct MockMapService: FirebaseServiceProtocol {
 
     // Required by protocol — not used in MapView
     func createHabit(_ habit: Habit) async throws -> String { "" }
-    func habitLogComplition(habitId: String, userId: String, location: HabitLocation?) async throws {}
+    func habitLogCompletion(habitId: String, userId: String, location: HabitLocation?) async throws {}
     func fetchTodayLogs(userId: String) async throws -> [HabitLog] { [] }
     func deleteHabit(habitId: String, userId: String) async throws {}
 }
