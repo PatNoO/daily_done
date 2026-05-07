@@ -4,9 +4,9 @@ struct ProfileView: View {
 
     @ObservedObject var vm: AuthViewModel
 
-    @AppStorage("notificationsEnabled") private var notificationsEnabled = true
-    @AppStorage("darkModeEnabled") private var darkModeEnabled = true
-    @AppStorage("locationEnabled") private var locationEnabled = false
+    @AppStorage(UserDefaultsKey.notificationsEnabled) private var notificationsEnabled = true
+    @AppStorage(UserDefaultsKey.darkModeEnabled) private var darkModeEnabled = true
+    @AppStorage(UserDefaultsKey.locationEnabled) private var locationEnabled = false
 
     var body: some View {
         ZStack {
@@ -30,7 +30,7 @@ struct ProfileView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    // TODO: open settings sheet (future ticket)
+                    // settings sheet — tracked in a separate ticket
                 } label: {
                     Image(systemName: "gearshape")
                         .foregroundStyle(Color("textSecondary"))
@@ -51,13 +51,14 @@ struct ProfileView: View {
         }
     }
 
+    // MARK: - Avatar Section
 
     private var avatarSection: some View {
         VStack(spacing: DesignSystem.Spacing.md) {
             ZStack {
                 Circle()
-                    .fill(Color("brandPrimary").opacity(0.6))
-                    .frame(width: 80, height: 80)
+                    .fill(Color("brandPrimary").opacity(DesignSystem.Opacity.avatarFill))
+                    .frame(width: DesignSystem.Size.avatar, height: DesignSystem.Size.avatar)
                 Text(initials)
                     .font(.title2).fontWeight(.bold)
                     .foregroundStyle(.white)
@@ -76,10 +77,10 @@ struct ProfileView: View {
         }
     }
 
+    // MARK: - Stats Section
 
     private var statsSection: some View {
         HStack(spacing: DesignSystem.Spacing.md) {
-            // TODO: replace with real counts from HabitViewModel
             StatCard(value: "0", label: "Habits", color: Color("brandPrimary"))
             StatCard(value: "0", label: "Done", color: Color("brandPrimary"))
             StatCard(value: "0", label: "Best streak", color: Color("brandAccent"))
@@ -87,13 +88,14 @@ struct ProfileView: View {
         .padding(.horizontal, DesignSystem.Spacing.base)
     }
 
+    // MARK: - Settings Section
 
     private var settingsSection: some View {
         VStack(spacing: 0) {
             SettingsRow(icon: "bell", label: "Notifications", isOn: $notificationsEnabled)
-            Divider().padding(.leading, 52)
+            Divider().padding(.leading, DesignSystem.Size.settingsRowInset)
             SettingsRow(icon: "moon", label: "Dark Mode", isOn: $darkModeEnabled)
-            Divider().padding(.leading, 52)
+            Divider().padding(.leading, DesignSystem.Size.settingsRowInset)
             SettingsRow(icon: "location", label: "Location Tracking", isOn: $locationEnabled)
         }
         .background(Color("backgroundSecondary"))
@@ -101,6 +103,7 @@ struct ProfileView: View {
         .padding(.horizontal, DesignSystem.Spacing.base)
     }
 
+    // MARK: - Sign Out Button
 
     private var signOutButton: some View {
         Button {
@@ -113,29 +116,31 @@ struct ProfileView: View {
             .foregroundStyle(Color("brandAccent"))
             .frame(maxWidth: .infinity)
             .padding(.vertical, DesignSystem.Spacing.base)
-            .background(Color("brandAccent").opacity(0.15))
+            .background(Color("brandAccent").opacity(DesignSystem.Opacity.tintedBackground))
             .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.md))
             .overlay(
                 RoundedRectangle(cornerRadius: DesignSystem.Radius.md)
-                    .stroke(Color("brandAccent").opacity(0.4), lineWidth: 1)
+                    .stroke(Color("brandAccent").opacity(DesignSystem.Opacity.tintedBorder), lineWidth: DesignSystem.Stroke.thin)
             )
         }
         .accessibilityLabel("Sign out of your account")
     }
 
+    // MARK: - Helpers
 
     private var initials: String {
         if let name = vm.displayName, !name.isEmpty {
-            let parts = name.split(separator: " ")
-            let first = parts.first?.prefix(1) ?? ""
-            let last = parts.dropFirst().first?.prefix(1) ?? ""
-            return "\(first)\(last)".uppercased()
+            let nameParts = name.split(separator: " ")
+            let firstName = nameParts.first?.prefix(1) ?? ""
+            let lastName = nameParts.dropFirst().first?.prefix(1) ?? ""
+            return "\(firstName)\(lastName)".uppercased()
         }
         let username = vm.email?.split(separator: "@").first ?? ""
         return String(username.prefix(2)).uppercased()
     }
 }
 
+// MARK: - Subviews
 
 private struct StatCard: View {
     let value: String
@@ -166,7 +171,7 @@ private struct SettingsRow: View {
     var body: some View {
         HStack(spacing: DesignSystem.Spacing.md) {
             Image(systemName: icon)
-                .frame(width: 20)
+                .frame(width: DesignSystem.Size.iconSmall)
                 .foregroundStyle(Color("brandPrimary"))
             Text(label)
                 .foregroundStyle(Color("textPrimary"))
@@ -176,7 +181,7 @@ private struct SettingsRow: View {
                 .tint(Color("brandPrimary"))
         }
         .padding(.horizontal, DesignSystem.Spacing.base)
-        .padding(.vertical, 14)
+        .padding(.vertical, DesignSystem.Spacing.base)
     }
 }
 

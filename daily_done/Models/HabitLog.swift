@@ -14,6 +14,7 @@ struct HabitLog: Identifiable, Codable, Hashable {
     var location: HabitLocation?
 }
 
+#if DEBUG
 extension HabitLog {
     static var preview: HabitLog {
         HabitLog(
@@ -25,3 +26,4 @@ extension HabitLog {
         )
     }
 }
+#endif

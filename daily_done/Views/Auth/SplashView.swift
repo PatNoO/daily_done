@@ -9,7 +9,7 @@ struct SplashView: View {
                 .ignoresSafeArea()
 
             RadialGradient(
-                colors: [Color("brandPrimary").opacity(0.3), .clear],
+                colors: [Color("brandPrimary").opacity(DesignSystem.Opacity.splashGradient), .clear],
                 center: .center,
                 startRadius: 0,
                 endRadius: 280
@@ -21,16 +21,16 @@ struct SplashView: View {
 
                 ZStack {
                     Circle()
-                        .fill(Color("brandPrimary").opacity(0.9))
-                        .frame(width: 96, height: 96)
+                        .fill(Color("brandPrimary").opacity(DesignSystem.Opacity.logoFill))
+                        .frame(width: DesignSystem.Size.logoCircle, height: DesignSystem.Size.logoCircle)
                     Image(systemName: "flame.fill")
-                        .font(.system(size: 40, weight: .medium))
+                        .font(.system(size: DesignSystem.Size.splashFlame, weight: .medium))
                         .foregroundStyle(.white)
                 }
 
-                Spacer().frame(height: 32)
+                Spacer().frame(height: DesignSystem.Spacing.xl)
 
-                VStack(spacing: 12) {
+                VStack(spacing: DesignSystem.Spacing.md) {
                     Text("Daily Done")
                         .font(.largeTitle).fontWeight(.bold)
                         .foregroundStyle(Color("textPrimary"))
@@ -39,36 +39,44 @@ struct SplashView: View {
                         .foregroundStyle(Color("textSecondary"))
                 }
 
-                Spacer().frame(height: 48)
+                Spacer().frame(height: DesignSystem.Spacing.xxl)
 
                 Button(action: onGetStarted) {
-                    HStack(spacing: 8) {
+                    HStack(spacing: DesignSystem.Spacing.sm) {
                         Text("Get Started").fontWeight(.semibold)
                         Image(systemName: "arrow.right")
                     }
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
+                    .padding(.vertical, DesignSystem.Spacing.base)
                     .background(Color("brandPrimary"))
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.button))
                 }
-                .padding(.horizontal, 32)
+                .padding(.horizontal, DesignSystem.Spacing.xl)
 
                 Spacer()
             }
+
+            // MARK: - Version
 
             VStack {
                 Spacer()
                 HStack {
-                    Text("v1.0.0")
+                    Text(appVersion)
                         .font(.caption2)
-                        .foregroundStyle(Color("textSecondary").opacity(0.5))
-                        .padding(.leading, 16)
-                        .padding(.bottom, 16)
+                        .foregroundStyle(Color("textSecondary").opacity(DesignSystem.Opacity.subtle))
+                        .padding(.leading, DesignSystem.Spacing.base)
+                        .padding(.bottom, DesignSystem.Spacing.base)
                     Spacer()
                 }
             }
         }
+    }
+
+   
+    private var appVersion: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        return "v\(version)"
     }
 }
 

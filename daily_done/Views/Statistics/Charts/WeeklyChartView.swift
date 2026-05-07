@@ -6,7 +6,7 @@ struct WeeklyChartView: View {
 
     private let dayFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "EEE"  // Bra Att veta ! -> "EEE" is just a secret code telling DateFormatter: "give me the 3-letter abbreviation of the weekday".
+        formatter.dateFormat = DateFormat.shortWeekday
         return formatter
     }()
 
@@ -29,7 +29,7 @@ struct WeeklyChartView: View {
                     .foregroundStyle(Color("textSecondary"))
             }
         }
-        .frame(height: 200)
+        .frame(height: DesignSystem.Size.chartHeight)
     }
 }
 

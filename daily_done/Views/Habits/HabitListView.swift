@@ -29,7 +29,7 @@ struct HabitListView: View {
             fabButton
                 .padding(DesignSystem.Spacing.lg)
         }
-        
+
         .sheet(isPresented: $showCreateSheet) {
             CreateHabitSheet(vm: vm)
         }
@@ -50,6 +50,7 @@ struct HabitListView: View {
         }
     }
 
+    // MARK: - Header
 
     private var headerSection: some View {
         HStack(alignment: .top) {
@@ -73,15 +74,15 @@ struct HabitListView: View {
 
         return ZStack {
             Circle()
-                .stroke(Color("brandPrimary").opacity(0.2), lineWidth: 5)
-                .frame(width: 52, height: 52)
+                .stroke(Color("brandPrimary").opacity(DesignSystem.Opacity.avatarOuter), lineWidth: DesignSystem.Stroke.ring)
+                .frame(width: DesignSystem.Size.progressRing, height: DesignSystem.Size.progressRing)
             Circle()
                 .trim(from: 0, to: progress)
                 .stroke(
                     Color("brandPrimary"),
-                    style: StrokeStyle(lineWidth: 5, lineCap: .round)
+                    style: StrokeStyle(lineWidth: DesignSystem.Stroke.ring, lineCap: .round)
                 )
-                .frame(width: 52, height: 52)
+                .frame(width: DesignSystem.Size.progressRing, height: DesignSystem.Size.progressRing)
                 .rotationEffect(.degrees(-90))
                 .animation(.easeInOut, value: progress)
             VStack(spacing: 0) {
@@ -89,7 +90,7 @@ struct HabitListView: View {
                     .font(.caption).fontWeight(.bold)
                     .foregroundStyle(Color("textPrimary"))
                 Text("done")
-                    .font(.system(size: 8))
+                    .font(.system(size: DesignSystem.Size.microLabel))
                     .foregroundStyle(Color("textSecondary"))
             }
         }
@@ -103,12 +104,12 @@ struct HabitListView: View {
                 .foregroundStyle(Color("textSecondary"))
             Spacer()
             Button("See all") {}
-                // TODO: navigate to full log history (future ticket)
                 .font(.caption).fontWeight(.semibold)
                 .foregroundStyle(Color("brandPrimary"))
         }
     }
 
+    // MARK: - Content
 
     @ViewBuilder
     private var contentView: some View {
@@ -161,6 +162,7 @@ struct HabitListView: View {
         .scrollContentBackground(.hidden)
     }
 
+    // MARK: - FAB
 
     private var fabButton: some View {
         Button {
@@ -169,31 +171,33 @@ struct HabitListView: View {
             Image(systemName: "plus")
                 .font(.title2.weight(.semibold))
                 .foregroundStyle(.white)
-                .frame(width: 56, height: 56)
+                .frame(width: DesignSystem.Size.fab, height: DesignSystem.Size.fab)
                 .background(Color("brandPrimary"))
                 .clipShape(Circle())
                 .shadow(
-                    color: Color("brandPrimary").opacity(0.4),
-                    radius: 8,
+                    color: Color("brandPrimary").opacity(DesignSystem.Opacity.shadowFab),
+                    radius: DesignSystem.Spacing.sm,
                     x: 0,
-                    y: 4
+                    y: DesignSystem.Spacing.xs
                 )
         }
         .accessibilityLabel("Add new habit")
     }
 
+    // MARK: - Helpers
+
     private var greeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
         switch hour {
-        case 5..<12: return "Good morning 👋"
-        case 12..<17: return "Good afternoon 👋"
+        case Greeting.morningStart..<Greeting.afternoonStart: return "Good morning 👋"
+        case Greeting.afternoonStart..<Greeting.eveningStart: return "Good afternoon 👋"
         default: return "Good evening 🌙"
         }
     }
 
     private var todayDateString: String {
         let f = DateFormatter()
-        f.dateFormat = "EEEE, MMM d"
+        f.dateFormat = DateFormat.fullWeekdayShortMonth
         return f.string(from: Date())
     }
 }

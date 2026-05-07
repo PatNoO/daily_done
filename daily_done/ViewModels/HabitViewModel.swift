@@ -3,6 +3,9 @@ import Foundation
 
 @MainActor
 final class HabitViewModel: ObservableObject {
+
+    // MARK: - Properties
+
     @Published var habits: [Habit] = []
     @Published var isLoading: Bool = false
     @Published var error: HabitError?
@@ -12,6 +15,8 @@ final class HabitViewModel: ObservableObject {
     private let service: FirebaseServiceProtocol
     private let notificationService: NotificationServiceProtocol
     private let locationService: LocationServiceProtocol
+
+    // MARK: - Init
 
     init(
         userId: String,
@@ -24,6 +29,8 @@ final class HabitViewModel: ObservableObject {
         self.notificationService = notificationService ?? NotificationService.shared
         self.locationService = locationService ?? LocationService.shared
     }
+
+    // MARK: - Load
 
     func loadHabits() async {
         isLoading = true
@@ -74,6 +81,8 @@ final class HabitViewModel: ObservableObject {
         }
     }
 
+    // MARK: - Actions
+
     func createHabit(
         name: String,
         category: HabitCategory,
@@ -116,7 +125,7 @@ final class HabitViewModel: ObservableObject {
         let location = await locationService.currentLocation()
 
         do {
-            try await service.habitLogComplition(
+            try await service.habitLogCompletion(
                 habitId: habitId,
                 userId: habit.userId,
                 location: location
@@ -154,6 +163,8 @@ final class HabitViewModel: ObservableObject {
         }
     }
 }
+
+// MARK: - Errors
 
 extension HabitViewModel {
     enum HabitError: LocalizedError {

@@ -3,6 +3,9 @@ import Foundation
 
 @MainActor
 final class AuthViewModel: ObservableObject {
+
+    // MARK: - Properties
+
     @Published var isSignedIn: Bool = false
     @Published var userId: String?
     @Published var email: String?
@@ -13,6 +16,8 @@ final class AuthViewModel: ObservableObject {
 
     private let service: FirebaseAuthServiceProtocol
     private var listenerTask: Task<Void, Never>?
+
+    // MARK: - Init
 
     init(service: (any FirebaseAuthServiceProtocol)? = nil) {
         self.service = service ?? FirebaseAuthService()
@@ -35,6 +40,8 @@ final class AuthViewModel: ObservableObject {
             }
         }
     }
+
+    // MARK: - Actions
 
     func signUp(email: String, password: String, displayName: String) async {
         error = nil
@@ -84,6 +91,8 @@ final class AuthViewModel: ObservableObject {
         }
     }
 }
+
+// MARK: - Errors
 
 extension AuthViewModel {
     enum AuthError: LocalizedError {

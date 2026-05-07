@@ -10,6 +10,7 @@ struct HabitLogAnnotation: Identifiable {
     let coordinate: CLLocationCoordinate2D
 }
 
+
 @MainActor
 final class MapViewModel: ObservableObject {
     @Published var habits: [Habit] = []
@@ -31,7 +32,7 @@ final class MapViewModel: ObservableObject {
         return annotations.filter { $0.habitId == id }
     }
 
-    func load() async {
+    func loadNearbyHabits() async {
         isLoading = true
         defer { isLoading = false }
 
@@ -69,8 +70,7 @@ final class MapViewModel: ObservableObject {
 
         } catch let fetchError {
             error = "Could not load map data. Please try again."
-            print("MapViewModel load failed: \(fetchError.localizedDescription)")
-
+            print("MapViewModel loadNearbyHabits failed: \(fetchError.localizedDescription)")
         }
     }
 }
