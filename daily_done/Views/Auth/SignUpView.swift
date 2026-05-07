@@ -17,7 +17,7 @@ struct SignUpView: View {
         ZStack {
             RadialGradient(
                 gradient: Gradient(colors: [
-                    Color("brandPrimary").opacity(0.25),
+                    Color("brandPrimary").opacity(DesignSystem.Opacity.headerGradient),
                     Color("backgroundPrimary"),
                 ]),
                 center: .top,
@@ -29,21 +29,21 @@ struct SignUpView: View {
             VStack(spacing: 0) {
                 Spacer()
                 headerSection
-                Spacer().frame(height: 40)
+                Spacer().frame(height: DesignSystem.Spacing.formGap)
 
-                VStack(spacing: 12) {
+                VStack(spacing: DesignSystem.Spacing.md) {
                     nameField
                     emailField
                     passwordField
                 }
-                .padding(.horizontal, 32)
+                .padding(.horizontal, DesignSystem.Spacing.xl)
 
-                Spacer().frame(height: 32)
+                Spacer().frame(height: DesignSystem.Spacing.xl)
                 signUpButton
-                    .padding(.horizontal, 32)
+                    .padding(.horizontal, DesignSystem.Spacing.xl)
                 Spacer()
                 signInFooter
-                    .padding(.bottom, 32)
+                    .padding(.bottom, DesignSystem.Spacing.xl)
             }
         }
         .alert(
@@ -59,36 +59,40 @@ struct SignUpView: View {
         }
     }
 
+    // MARK: - Header
+
     private var headerSection: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: DesignSystem.Spacing.base) {
             ZStack {
                 Circle()
-                    .fill(Color("brandPrimary").opacity(0.2))
-                    .frame(width: 80, height: 80)
+                    .fill(Color("brandPrimary").opacity(DesignSystem.Opacity.avatarOuter))
+                    .frame(width: DesignSystem.Size.avatar, height: DesignSystem.Size.avatar)
                 Circle()
-                    .fill(Color("brandPrimary").opacity(0.55))
-                    .frame(width: 60, height: 60)
+                    .fill(Color("brandPrimary").opacity(DesignSystem.Opacity.avatarInner))
+                    .frame(width: DesignSystem.Size.avatarInner, height: DesignSystem.Size.avatarInner)
                 Image(systemName: "person.badge.plus")
-                    .font(.system(size: 26, weight: .medium))
+                    .font(.system(size: DesignSystem.Size.authIconHeader, weight: .medium))
                     .foregroundStyle(Color("textPrimary"))
             }
-            VStack(spacing: 8) {
+            VStack(spacing: DesignSystem.Spacing.sm) {
                 Text("Create account")
-                    .font(.system(size: 28, weight: .bold))
+                    .font(.title).fontWeight(.bold)
                     .foregroundStyle(Color("textPrimary"))
                 Text("Start tracking your habits")
-                    .font(.system(size: 15))
+                    .font(.subheadline)
                     .foregroundStyle(Color("textSecondary"))
             }
         }
     }
 
+    // MARK: - Fields
+
     private var nameField: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack(spacing: 12) {
+        VStack(alignment: .leading, spacing: DesignSystem.Spacing.xs) {
+            HStack(spacing: DesignSystem.Spacing.md) {
                 Image(systemName: "person")
                     .foregroundStyle(Color("textSecondary"))
-                    .frame(width: 20)
+                    .frame(width: DesignSystem.Size.iconSmall)
                 TextField("Full name", text: $name)
                     .autocorrectionDisabled()
                     .focused($focusedField, equals: .name)
@@ -96,15 +100,15 @@ struct SignUpView: View {
                     .submitLabel(.next)
                     .onSubmit { focusedField = .email }
             }
-            .padding(.horizontal, 16).padding(.vertical, 16)
+            .padding(.horizontal, DesignSystem.Spacing.base).padding(.vertical, DesignSystem.Spacing.base)
             .background(Color("backgroundSecondary"))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.md))
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
+                RoundedRectangle(cornerRadius: DesignSystem.Radius.md)
                     .stroke(
                         nameError != nil
-                            ? Color.red.opacity(0.7)
-                            : Color("backgroundSecondary").opacity(0.6),
+                            ? Color.red.opacity(DesignSystem.Opacity.errorStroke)
+                            : Color("backgroundSecondary").opacity(DesignSystem.Opacity.disabled),
                         lineWidth: 1
                     )
             )
@@ -113,16 +117,16 @@ struct SignUpView: View {
                 Text(nameError)
                     .font(.caption)
                     .foregroundStyle(.red)
-                    .padding(.leading, 4)
+                    .padding(.leading, DesignSystem.Spacing.xs)
             }
         }
     }
 
     private var emailField: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DesignSystem.Spacing.md) {
             Image(systemName: "envelope")
                 .foregroundStyle(Color("textSecondary"))
-                .frame(width: 20)
+                .frame(width: DesignSystem.Size.iconSmall)
             TextField("Email address", text: $email)
                 .keyboardType(.emailAddress)
                 .autocorrectionDisabled()
@@ -132,32 +136,34 @@ struct SignUpView: View {
                 .submitLabel(.next)
                 .onSubmit { focusedField = .password }
         }
-        .padding(.horizontal, 16).padding(.vertical, 16)
+        .padding(.horizontal, DesignSystem.Spacing.base).padding(.vertical, DesignSystem.Spacing.base)
         .background(Color("backgroundSecondary"))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.md))
     }
 
     private var passwordField: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DesignSystem.Spacing.md) {
             Image(systemName: "lock")
                 .foregroundStyle(Color("textSecondary"))
-                .frame(width: 20)
+                .frame(width: DesignSystem.Size.iconSmall)
             SecureField("Password", text: $password)
                 .focused($focusedField, equals: .password)
                 .foregroundStyle(Color("textPrimary"))
                 .submitLabel(.done)
                 .onSubmit { Task { await signUp() } }
         }
-        .padding(.horizontal, 16).padding(.vertical, 16)
+        .padding(.horizontal, DesignSystem.Spacing.base).padding(.vertical, DesignSystem.Spacing.base)
         .background(Color("backgroundSecondary"))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.md))
     }
+
+    // MARK: - Sign Up Button
 
     private var signUpButton: some View {
         Button {
             Task { await signUp() }
         } label: {
-            HStack(spacing: 8) {
+            HStack(spacing: DesignSystem.Spacing.sm) {
                 if vm.isLoading {
                     ProgressView().tint(.white)
                 } else {
@@ -167,7 +173,7 @@ struct SignUpView: View {
             }
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
+            .padding(.vertical, DesignSystem.Spacing.base)
             .background(
                 LinearGradient(
                     colors: [Color("brandPrimary"), Color("brandAccent")],
@@ -175,15 +181,15 @@ struct SignUpView: View {
                     endPoint: .trailing
                 )
             )
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.button))
             .shadow(
-                color: Color("brandPrimary").opacity(0.45),
-                radius: 12,
+                color: Color("brandPrimary").opacity(DesignSystem.Opacity.shadowBrand),
+                radius: DesignSystem.Radius.md,
                 x: 0,
-                y: 4
+                y: DesignSystem.Spacing.xs
             )
             .opacity(
-                name.isEmpty || email.isEmpty || password.isEmpty ? 0.6 : 1.0
+                name.isEmpty || email.isEmpty || password.isEmpty ? DesignSystem.Opacity.disabled : 1.0
             )
         }
         .disabled(
@@ -191,13 +197,15 @@ struct SignUpView: View {
         )
     }
 
+    // MARK: - Footer
+
     private var signInFooter: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: DesignSystem.Spacing.xs) {
             Text("Already have an account?")
-                .font(.system(size: 14))
+                .font(.caption)
                 .foregroundStyle(Color("textSecondary"))
             Button("Sign In") { dismiss() }
-                .font(.system(size: 14, weight: .semibold))
+                .font(.caption).fontWeight(.semibold)
                 .foregroundStyle(Color("brandPrimary"))
         }
     }

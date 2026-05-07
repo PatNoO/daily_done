@@ -21,21 +21,21 @@ struct SignInView: View {
             VStack(spacing: 0) {
                 Spacer()
                 logoSection
-                Spacer().frame(height: 40)
+                Spacer().frame(height: DesignSystem.Spacing.formGap)
 
-                VStack(spacing: 12) {
+                VStack(spacing: DesignSystem.Spacing.md) {
                     emailField
                     passwordField
                     forgotPasswordLink
                 }
-                .padding(.horizontal, 32)
+                .padding(.horizontal, DesignSystem.Spacing.xl)
 
-                Spacer().frame(height: 32)
+                Spacer().frame(height: DesignSystem.Spacing.xl)
                 signInButton
-                    .padding(.horizontal, 32)
+                    .padding(.horizontal, DesignSystem.Spacing.xl)
                 Spacer()
                 signUpFooter
-                    .padding(.bottom, 32)
+                    .padding(.bottom, DesignSystem.Spacing.xl)
             }
         }
 
@@ -52,20 +52,22 @@ struct SignInView: View {
         }
     }
 
+    // MARK: - Logo Section
+
     private var logoSection: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: DesignSystem.Spacing.base) {
             ZStack {
                 Circle()
-                    .fill(Color("brandPrimary").opacity(0.2))
-                    .frame(width: 80, height: 80)
+                    .fill(Color("brandPrimary").opacity(DesignSystem.Opacity.avatarOuter))
+                    .frame(width: DesignSystem.Size.avatar, height: DesignSystem.Size.avatar)
                 Circle()
-                    .fill(Color("brandPrimary").opacity(0.55))
-                    .frame(width: 60, height: 60)
+                    .fill(Color("brandPrimary").opacity(DesignSystem.Opacity.avatarInner))
+                    .frame(width: DesignSystem.Size.avatarInner, height: DesignSystem.Size.avatarInner)
                 Image(systemName: "timer")
-                    .font(.system(size: 26, weight: .medium))
+                    .font(.system(size: DesignSystem.Size.authIconHeader, weight: .medium))
                     .foregroundStyle(.white)
             }
-            VStack(spacing: 8) {
+            VStack(spacing: DesignSystem.Spacing.sm) {
                 Text("Welcome back")
                     .font(.title2).fontWeight(.bold)
                     .foregroundStyle(Color("textPrimary"))
@@ -76,11 +78,13 @@ struct SignInView: View {
         }
     }
 
+    // MARK: - Fields
+
     private var emailField: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DesignSystem.Spacing.md) {
             Image(systemName: "envelope")
                 .foregroundStyle(Color("textSecondary"))
-                .frame(width: 20)
+                .frame(width: DesignSystem.Size.iconSmall)
             TextField("Email address", text: $email)
                 .keyboardType(.emailAddress)
                 .autocorrectionDisabled()
@@ -90,25 +94,25 @@ struct SignInView: View {
                 .submitLabel(.next)
                 .onSubmit { focusedField = .password }
         }
-        .padding(.horizontal, 16).padding(.vertical, 16)
+        .padding(.horizontal, DesignSystem.Spacing.base).padding(.vertical, DesignSystem.Spacing.base)
         .background(Color("backgroundSecondary"))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.md))
     }
 
     private var passwordField: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DesignSystem.Spacing.md) {
             Image(systemName: "lock")
                 .foregroundStyle(Color("textSecondary"))
-                .frame(width: 20)
+                .frame(width: DesignSystem.Size.iconSmall)
             SecureField("Password", text: $password)
                 .focused($focusedField, equals: .password)
                 .foregroundStyle(Color("textPrimary"))
                 .submitLabel(.done)
                 .onSubmit { Task { await signIn() } }
         }
-        .padding(.horizontal, 16).padding(.vertical, 16)
+        .padding(.horizontal, DesignSystem.Spacing.base).padding(.vertical, DesignSystem.Spacing.base)
         .background(Color("backgroundSecondary"))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.md))
     }
 
     private var forgotPasswordLink: some View {
@@ -126,12 +130,13 @@ struct SignInView: View {
         }
     }
 
+    // MARK: - Sign In Button
+
     private var signInButton: some View {
         Button {
-
             Task { await signIn() }
         } label: {
-            HStack(spacing: 8) {
+            HStack(spacing: DesignSystem.Spacing.sm) {
                 if vm.isLoading {
                     ProgressView().tint(.white)
                 } else {
@@ -141,7 +146,7 @@ struct SignInView: View {
             }
             .foregroundStyle(.white)
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
+            .padding(.vertical, DesignSystem.Spacing.base)
             .background(
                 LinearGradient(
                     colors: [Color("brandPrimary"), Color("brandAccent")],
@@ -149,21 +154,22 @@ struct SignInView: View {
                     endPoint: .trailing
                 )
             )
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.button))
             .shadow(
-                color: Color("brandPrimary").opacity(0.45),
-                radius: 12,
+                color: Color("brandPrimary").opacity(DesignSystem.Opacity.shadowBrand),
+                radius: DesignSystem.Radius.md,
                 x: 0,
-                y: 4
+                y: DesignSystem.Spacing.xs
             )
-            .opacity(email.isEmpty || password.isEmpty ? 0.6 : 1.0)
+            .opacity(email.isEmpty || password.isEmpty ? DesignSystem.Opacity.disabled : 1.0)
         }
-
         .disabled(vm.isLoading || email.isEmpty || password.isEmpty)
     }
 
+    // MARK: - Footer
+
     private var signUpFooter: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: DesignSystem.Spacing.xs) {
             Text("Don't have an account?")
                 .font(.caption)
                 .foregroundStyle(Color("textSecondary"))

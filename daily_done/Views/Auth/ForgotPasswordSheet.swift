@@ -44,17 +44,17 @@ struct ForgotPasswordSheet: View {
     }
 
     private var formView: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: DesignSystem.Spacing.lg) {
             Text("Enter the email address for your account and we'll send you a reset link.")
                 .font(.body)
                 .foregroundStyle(Color("textSecondary"))
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
+                .padding(.horizontal, DesignSystem.Spacing.xl)
 
-            HStack(spacing: 12) {
+            HStack(spacing: DesignSystem.Spacing.md) {
                 Image(systemName: "envelope")
                     .foregroundStyle(Color("textSecondary"))
-                    .frame(width: 20)
+                    .frame(width: DesignSystem.Size.iconSmall)
                 TextField("Email address", text: $email)
                     .keyboardType(.emailAddress)
                     .autocorrectionDisabled()
@@ -64,15 +64,16 @@ struct ForgotPasswordSheet: View {
                     .submitLabel(.send)
                     .onSubmit { Task { await submit() } }
             }
-            .padding(.horizontal, 16).padding(.vertical, 16)
+            .padding(.horizontal, DesignSystem.Spacing.base)
+            .padding(.vertical, DesignSystem.Spacing.base)
             .background(Color("backgroundSecondary"))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .padding(.horizontal, 32)
+            .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.md))
+            .padding(.horizontal, DesignSystem.Spacing.xl)
 
             Button {
                 Task { await submit() }
             } label: {
-                HStack(spacing: 8) {
+                HStack(spacing: DesignSystem.Spacing.sm) {
                     if isSubmitting {
                         ProgressView().tint(.white)
                     } else {
@@ -82,7 +83,7 @@ struct ForgotPasswordSheet: View {
                 }
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
+                .padding(.vertical, DesignSystem.Spacing.base)
                 .background(
                     LinearGradient(
                         colors: [Color("brandPrimary"), Color("brandAccent")],
@@ -90,22 +91,21 @@ struct ForgotPasswordSheet: View {
                         endPoint: .trailing
                     )
                 )
-                .clipShape(RoundedRectangle(cornerRadius: 14))
-                .shadow(color: Color("brandPrimary").opacity(0.45), radius: 12, x: 0, y: 4)
-                .opacity(email.isEmpty ? 0.6 : 1.0)
+                .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.button))
+                .shadow(color: Color("brandPrimary").opacity(DesignSystem.Opacity.shadowBrand), radius: DesignSystem.Radius.md, x: 0, y: DesignSystem.Spacing.xs)
+                .opacity(email.isEmpty ? DesignSystem.Opacity.disabled : 1.0)
             }
             .disabled(isSubmitting || email.isEmpty)
-            .padding(.horizontal, 32)
+            .padding(.horizontal, DesignSystem.Spacing.xl)
         }
-        .padding(.top, 32)
+        .padding(.top, DesignSystem.Spacing.xl)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        
     }
 
     private var successView: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: DesignSystem.Spacing.basePlus) {
             Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 56))
+                .font(.system(size: DesignSystem.Size.fab))
                 .foregroundStyle(Color("brandPrimary"))
 
             Text("Check your inbox")
@@ -116,16 +116,16 @@ struct ForgotPasswordSheet: View {
                 .font(.body)
                 .foregroundStyle(Color("textSecondary"))
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
+                .padding(.horizontal, DesignSystem.Spacing.xl)
 
             Button("Done") {
                 dismiss()
             }
             .font(.body).fontWeight(.semibold)
             .foregroundStyle(Color("brandPrimary"))
-            .padding(.top, 8)
+            .padding(.top, DesignSystem.Spacing.sm)
         }
-        .padding(.top, 48)
+        .padding(.top, DesignSystem.Spacing.xxl)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 
