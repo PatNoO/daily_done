@@ -6,6 +6,7 @@ struct ForgotPasswordSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var email = ""
+    @State private var isSubmitting = false
     @FocusState private var emailFocused: Bool
 
     var body: some View {
@@ -24,8 +25,6 @@ struct ForgotPasswordSheet: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
-                        vm.resetEmailSent = false
-                        vm.error = nil
                         dismiss()
                     }
                 }
@@ -74,7 +73,7 @@ struct ForgotPasswordSheet: View {
                 Task { await submit() }
             } label: {
                 HStack(spacing: 8) {
-                    if vm.isLoading {
+                    if isSubmitting {
                         ProgressView().tint(.white)
                     } else {
                         Text("Send Reset Link").fontWeight(.semibold)
@@ -95,7 +94,7 @@ struct ForgotPasswordSheet: View {
                 .shadow(color: Color("brandPrimary").opacity(0.45), radius: 12, x: 0, y: 4)
                 .opacity(email.isEmpty ? 0.6 : 1.0)
             }
-            .disabled(vm.isLoading || email.isEmpty)
+            .disabled(isSubmitting || email.isEmpty)
             .padding(.horizontal, 32)
         }
         .padding(.top, 32)
@@ -105,7 +104,7 @@ struct ForgotPasswordSheet: View {
 
     private var successView: some View {
         VStack(spacing: 20) {
-            Image(systemName: "envelope.badge.checkmark")
+            Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 56))
                 .foregroundStyle(Color("brandPrimary"))
 
@@ -120,7 +119,6 @@ struct ForgotPasswordSheet: View {
                 .padding(.horizontal, 32)
 
             Button("Done") {
-                vm.resetEmailSent = false
                 dismiss()
             }
             .font(.body).fontWeight(.semibold)
@@ -133,6 +131,8 @@ struct ForgotPasswordSheet: View {
 
     private func submit() async {
         emailFocused = false
+        isSubmitting = true
+        defer { isSubmitting = false }
         await vm.sendPasswordReset(email: email)
     }
 }

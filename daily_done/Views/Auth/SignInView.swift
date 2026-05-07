@@ -118,7 +118,10 @@ struct SignInView: View {
                 .font(.caption)
                 .foregroundStyle(Color("brandPrimary"))
         }
-        .sheet(isPresented: $showForgotPassword) {
+        .sheet(isPresented: $showForgotPassword, onDismiss: {
+            vm.resetEmailSent = false
+            vm.error = nil
+        }) {
             ForgotPasswordSheet(vm: vm)
         }
     }

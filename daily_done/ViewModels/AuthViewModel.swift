@@ -76,8 +76,6 @@ final class AuthViewModel: ObservableObject {
     func sendPasswordReset(email: String) async {
         error = nil
         resetEmailSent = false
-        isLoading = true
-        defer { isLoading = false }
         do {
             try await service.sendPasswordReset(email: email)
             resetEmailSent = true
