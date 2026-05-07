@@ -1,6 +1,8 @@
 import FirebaseFirestore
 import Foundation
 
+// MARK: - HabitCategory
+
 enum HabitCategory: String, Codable, CaseIterable, Identifiable {
     case health = "health"
     case fitness = "fitness"
@@ -37,6 +39,8 @@ enum HabitCategory: String, Codable, CaseIterable, Identifiable {
     }
 }
 
+// MARK: - Habit
+
 struct Habit: Identifiable, Codable, Hashable {
     @DocumentID var id: String?
     var userId: String
@@ -52,6 +56,9 @@ struct Habit: Identifiable, Codable, Hashable {
     var reminderTime: Date?
 }
 
+// MARK: - Preview
+
+#if DEBUG
 extension Habit {
     static var preview: Habit {
         Habit(
@@ -59,7 +66,7 @@ extension Habit {
             userId: "preview-user",
             name: "Morning Run",
             category: .fitness,
-            colorHex: "#FF6B35",
+            colorHex: DesignSystem.HabitPalette.orange,
             iconName: "figure.run",
             createdAt: Date(),
             currentStreak: 5,
@@ -70,3 +77,4 @@ extension Habit {
         )
     }
 }
+#endif
