@@ -18,6 +18,12 @@ struct ContentView: View {
             .tabItem {
                 Label("Stats", systemImage: "chart.bar")
             }
+            NavigationStack {
+                MapView(userId: userId)
+            }
+            .tabItem {
+                Label("Map", systemImage: "map")
+            }
 
             NavigationStack {
                 ProfileView(vm: auth)
