@@ -14,6 +14,17 @@ protocol FirebaseServiceProtocol {
     func deleteHabit(habitId: String, userId: String) async throws
 }
 
+enum FirebaseServiceError: LocalizedError {
+    case invalidDate
+
+    var errorDescription: String? {
+        switch self {
+        case .invalidDate:
+            return "Could not calculate a valid date range. Please try again."
+        }
+    }
+}
+
 actor FirebaseService: FirebaseServiceProtocol {
     static let shared = FirebaseService()
 
@@ -66,9 +77,11 @@ actor FirebaseService: FirebaseServiceProtocol {
     func fetchTodayLogs(userId: String) async throws -> [HabitLog] {
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: Date())
-        let endOfDay =
-            calendar.date(byAdding: .day, value: 1, to: startOfDay)
-            ?? startOfDay.addingTimeInterval(86_400)
+
+      
+        guard let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay) else {
+            throw FirebaseServiceError.invalidDate
+        }
 
         let snapshot =
             try await db
