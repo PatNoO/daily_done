@@ -9,6 +9,7 @@ final class AuthViewModel: ObservableObject {
     @Published var displayName: String?
     @Published var error: AuthError?
     @Published var isLoading: Bool = true
+    @Published var resetEmailSent: Bool = false
 
     private let service: FirebaseAuthServiceProtocol
     private var listenerTask: Task<Void, Never>?
@@ -71,6 +72,17 @@ final class AuthViewModel: ObservableObject {
             print("AuthViewModel signOut failed: \(error.localizedDescription)")
         }
     }
+
+    func sendPasswordReset(email: String) async {
+        error = nil
+        resetEmailSent = false
+        do {
+            try await service.sendPasswordReset(email: email)
+            resetEmailSent = true
+        } catch {
+            self.error = .resetFailed(error)
+        }
+    }
 }
 
 extension AuthViewModel {
@@ -78,6 +90,7 @@ extension AuthViewModel {
         case signInFailed(Error)
         case signOutFailed(Error)
         case signUpFailed(Error)
+        case resetFailed(Error)
 
         var errorDescription: String? {
             switch self {
@@ -87,6 +100,8 @@ extension AuthViewModel {
                 return "Could not sign out. Please try again."
             case .signUpFailed(let error):
                 return "Could not create account. \(error.localizedDescription)"
+            case .resetFailed:
+                return "Could not send reset email. Check that the address is correct."
             }
         }
     }

@@ -7,6 +7,7 @@ struct SignInView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var showSignUp = false
+    @State private var showForgotPassword = false
 
     @FocusState private var focusedField: Field?
 
@@ -113,10 +114,15 @@ struct SignInView: View {
     private var forgotPasswordLink: some View {
         HStack {
             Spacer()
-            Button("Forgot password?") {}
-                // TODO: implement forgot password flow later ticket
+            Button("Forgot password?") { showForgotPassword = true }
                 .font(.caption)
                 .foregroundStyle(Color("brandPrimary"))
+        }
+        .sheet(isPresented: $showForgotPassword, onDismiss: {
+            vm.resetEmailSent = false
+            vm.error = nil
+        }) {
+            ForgotPasswordSheet(vm: vm)
         }
     }
 
@@ -144,7 +150,12 @@ struct SignInView: View {
                 )
             )
             .clipShape(RoundedRectangle(cornerRadius: 14))
-            .shadow(color: Color("brandPrimary").opacity(0.45), radius: 12, x: 0, y: 4)
+            .shadow(
+                color: Color("brandPrimary").opacity(0.45),
+                radius: 12,
+                x: 0,
+                y: 4
+            )
             .opacity(email.isEmpty || password.isEmpty ? 0.6 : 1.0)
         }
 
