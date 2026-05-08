@@ -109,6 +109,7 @@ private struct HabitStreakRow: View {
             VStack(alignment: .leading, spacing: DesignSystem.Spacing.xxs) {
                 Text(habit.name)
                     .font(.headline)
+                    .foregroundStyle(Color("textPrimary"))
                 HStack(spacing: DesignSystem.Spacing.base) {
                     Label("\(habit.currentStreak)", systemImage: "flame.fill")
                         .foregroundStyle(.orange)
@@ -129,6 +130,7 @@ private struct HabitStreakRow: View {
             Color("backgroundSecondary").opacity(DesignSystem.Opacity.subtle),
             in: RoundedRectangle(cornerRadius: DesignSystem.Radius.md)
         )
+        .accessibilityElement(children: .combine)
     }
 }
 

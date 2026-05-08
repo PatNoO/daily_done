@@ -31,6 +31,7 @@ struct HabitRowView: View {
                     .foregroundStyle(.white)
                     .font(.system(size: DesignSystem.Size.habitRowIcon, weight: .medium))
             )
+            .accessibilityHidden(true)
     }
 
     // MARK: - Info
@@ -72,6 +73,7 @@ struct HabitRowView: View {
                 .font(.headline)
                 .foregroundStyle(Color("textPrimary"))
         }
+        .accessibilityLabel("\(habit.currentStreak) day streak")
     }
 
     // MARK: - Check Button
