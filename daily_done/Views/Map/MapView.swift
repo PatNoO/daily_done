@@ -52,6 +52,7 @@ struct MapView: View {
                             .font(.title)
                             .foregroundStyle(Color("brandPrimary"))
                     }
+                    .accessibilityLabel("Show details for \(item.habitName)")
                 }
             }
         }
@@ -85,9 +86,11 @@ struct MapView: View {
                 .padding(.horizontal, DesignSystem.Spacing.md)
                 .padding(.vertical, DesignSystem.Spacing.sm)
                 .background(isSelected ? Color("brandPrimary") : Color(.systemGray5))
-                .foregroundStyle(isSelected ? .white : .primary)
+                .foregroundStyle(isSelected ? Color.white : Color("textPrimary"))
                 .clipShape(Capsule())
         }
+        .accessibilityLabel(label)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
     // MARK: - Annotation Detail
@@ -98,7 +101,7 @@ struct MapView: View {
                 .font(.headline)
             Text(item.completedAt.formatted(date: .long, time: .shortened))
                 .font(.body)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(Color("textSecondary"))
             Spacer()
         }
         .padding(DesignSystem.Spacing.lg)
