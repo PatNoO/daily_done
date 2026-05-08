@@ -11,9 +11,9 @@ final class StatsViewModel: ObservableObject {
     @Published var error: StatsError?
 
     private let service: FirebaseServiceProtocol
-    private let userId: String
+    private var userId: String = ""
 
-    init(userId: String, service: FirebaseServiceProtocol? = nil) {
+    init(userId: String = "", service: FirebaseServiceProtocol? = nil) {
         self.userId = userId
         self.service = service ?? FirebaseService.shared
     }
@@ -66,5 +66,10 @@ final class StatsViewModel: ObservableObject {
             }.count
             return DayStat(id: date, count: count)
         }.reversed()
+    }
+    
+    
+    func configure(userId: String) {
+        self.userId = userId
     }
 }

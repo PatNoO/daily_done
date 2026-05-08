@@ -3,9 +3,12 @@ import SwiftUI
 
 struct MapView: View {
     @StateObject private var vm: MapViewModel
+    @Environment(\.userId) private var userId
 
-    init(userId: String, service: FirebaseServiceProtocol = FirebaseService.shared) {
-        _vm = StateObject(wrappedValue: MapViewModel(userId: userId, service: service))
+    init(service: FirebaseServiceProtocol = FirebaseService.shared) {
+        _vm = StateObject(
+            wrappedValue: MapViewModel(service: service)
+        )
     }
 
     @State private var selectedAnnotation: HabitLogAnnotation?
@@ -17,15 +20,21 @@ struct MapView: View {
         }
         .navigationTitle("Habit Map")
         .navigationBarTitleDisplayMode(.inline)
-        .task { await vm.loadNearbyHabits() }
+        .task {
+            vm.configure(userId: userId)
+            await vm.loadNearbyHabits()
+        }
         .sheet(item: $selectedAnnotation) { annotation in
             annotationDetail(annotation)
                 .presentationDetents([.fraction(0.3)])
         }
-        .alert("Error", isPresented: Binding(
-            get: { vm.error != nil },
-            set: { if !$0 { vm.error = nil } }
-        )) {
+        .alert(
+            "Error",
+            isPresented: Binding(
+                get: { vm.error != nil },
+                set: { if !$0 { vm.error = nil } }
+            )
+        ) {
             Button("OK", role: .cancel) {}
         } message: {
             Text(vm.error ?? "")
@@ -33,7 +42,8 @@ struct MapView: View {
         .overlay {
             if vm.isLoading {
                 ProgressView()
-            } else if vm.filteredAnnotations.isEmpty && !vm.annotations.isEmpty {
+            } else if vm.filteredAnnotations.isEmpty && !vm.annotations.isEmpty
+            {
                 emptyFilterState
             } else if vm.annotations.isEmpty {
                 emptyNoLogsState
@@ -47,7 +57,9 @@ struct MapView: View {
         Map {
             ForEach(vm.filteredAnnotations) { item in
                 Annotation(item.habitName, coordinate: item.coordinate) {
-                    Button { selectedAnnotation = item } label: {
+                    Button {
+                        selectedAnnotation = item
+                    } label: {
                         Image(systemName: "mappin.circle.fill")
                             .font(.title)
                             .foregroundStyle(Color("brandPrimary"))
@@ -85,8 +97,12 @@ struct MapView: View {
                 .fontWeight(isSelected ? .semibold : .regular)
                 .padding(.horizontal, DesignSystem.Spacing.md)
                 .padding(.vertical, DesignSystem.Spacing.sm)
-                .background(isSelected ? Color("brandPrimary") : Color(.systemGray5))
-                .foregroundStyle(isSelected ? Color.white : Color("textPrimary"))
+                .background(
+                    isSelected ? Color("brandPrimary") : Color(.systemGray5)
+                )
+                .foregroundStyle(
+                    isSelected ? Color.white : Color("textPrimary")
+                )
                 .clipShape(Capsule())
         }
         .accessibilityLabel(label)
@@ -114,7 +130,9 @@ struct MapView: View {
         ContentUnavailableView(
             "No pins for this habit",
             systemImage: "mappin.slash",
-            description: Text("This habit has no logged locations. Try completing it with location enabled.")
+            description: Text(
+                "This habit has no logged locations. Try completing it with location enabled."
+            )
         )
     }
 
@@ -122,15 +140,18 @@ struct MapView: View {
         ContentUnavailableView(
             "No locations logged yet",
             systemImage: "map",
-            description: Text("Complete habits to start seeing your locations on the map.")
+            description: Text(
+                "Complete habits to start seeing your locations on the map."
+            )
         )
     }
 }
 
 #Preview {
     NavigationStack {
-        MapView(userId: "preview-user", service: MockMapService())
+        MapView(service: MockMapService())
     }
+    .environment(\.userId, "preview-user")
 }
 
 private struct MockMapService: FirebaseServiceProtocol {
@@ -177,33 +198,97 @@ private struct MockMapService: FirebaseServiceProtocol {
                 totalCompletions: 10,
                 isReminderEnabled: false,
                 reminderTime: nil
-            )
+            ),
         ]
     }
 
     func fetchAllLogs(userId: String) async throws -> [HabitLog] {
         [
             // Morning Run — 4 pins around Stockholm
-            HabitLog(id: "log-1", habitId: "habit-1", userId: userId, completedAt: Date(), location: HabitLocation(lat: 59.3293, lng: 18.0686)),
-            HabitLog(id: "log-2", habitId: "habit-1", userId: userId, completedAt: Date(), location: HabitLocation(lat: 59.3340, lng: 18.0750)),
-            HabitLog(id: "log-3", habitId: "habit-1", userId: userId, completedAt: Date(), location: HabitLocation(lat: 59.3250, lng: 18.0600)),
-            HabitLog(id: "log-4", habitId: "habit-1", userId: userId, completedAt: Date(), location: HabitLocation(lat: 59.3310, lng: 18.0810)),
+            HabitLog(
+                id: "log-1",
+                habitId: "habit-1",
+                userId: userId,
+                completedAt: Date(),
+                location: HabitLocation(lat: 59.3293, lng: 18.0686)
+            ),
+            HabitLog(
+                id: "log-2",
+                habitId: "habit-1",
+                userId: userId,
+                completedAt: Date(),
+                location: HabitLocation(lat: 59.3340, lng: 18.0750)
+            ),
+            HabitLog(
+                id: "log-3",
+                habitId: "habit-1",
+                userId: userId,
+                completedAt: Date(),
+                location: HabitLocation(lat: 59.3250, lng: 18.0600)
+            ),
+            HabitLog(
+                id: "log-4",
+                habitId: "habit-1",
+                userId: userId,
+                completedAt: Date(),
+                location: HabitLocation(lat: 59.3310, lng: 18.0810)
+            ),
 
             // Read 20 min — 3 pins (closer together, indoor habit)
-            HabitLog(id: "log-5", habitId: "habit-2", userId: userId, completedAt: Date(), location: HabitLocation(lat: 59.3320, lng: 18.0640)),
-            HabitLog(id: "log-6", habitId: "habit-2", userId: userId, completedAt: Date(), location: HabitLocation(lat: 59.3280, lng: 18.0700)),
-            HabitLog(id: "log-7", habitId: "habit-2", userId: userId, completedAt: Date(), location: HabitLocation(lat: 59.3300, lng: 18.0720)),
+            HabitLog(
+                id: "log-5",
+                habitId: "habit-2",
+                userId: userId,
+                completedAt: Date(),
+                location: HabitLocation(lat: 59.3320, lng: 18.0640)
+            ),
+            HabitLog(
+                id: "log-6",
+                habitId: "habit-2",
+                userId: userId,
+                completedAt: Date(),
+                location: HabitLocation(lat: 59.3280, lng: 18.0700)
+            ),
+            HabitLog(
+                id: "log-7",
+                habitId: "habit-2",
+                userId: userId,
+                completedAt: Date(),
+                location: HabitLocation(lat: 59.3300, lng: 18.0720)
+            ),
 
             // Meditate — 2 pins + 1 with no location (tests compactMap)
-            HabitLog(id: "log-8", habitId: "habit-3", userId: userId, completedAt: Date(), location: HabitLocation(lat: 59.3270, lng: 18.0660)),
-            HabitLog(id: "log-9", habitId: "habit-3", userId: userId, completedAt: Date(), location: HabitLocation(lat: 59.3350, lng: 18.0780)),
-            HabitLog(id: "log-10", habitId: "habit-3", userId: userId, completedAt: Date(), location: nil)
+            HabitLog(
+                id: "log-8",
+                habitId: "habit-3",
+                userId: userId,
+                completedAt: Date(),
+                location: HabitLocation(lat: 59.3270, lng: 18.0660)
+            ),
+            HabitLog(
+                id: "log-9",
+                habitId: "habit-3",
+                userId: userId,
+                completedAt: Date(),
+                location: HabitLocation(lat: 59.3350, lng: 18.0780)
+            ),
+            HabitLog(
+                id: "log-10",
+                habitId: "habit-3",
+                userId: userId,
+                completedAt: Date(),
+                location: nil
+            ),
         ]
     }
 
     // Required by protocol — not used in MapView
     func createHabit(_ habit: Habit) async throws -> String { "" }
-    func habitLogCompletion(habitId: String, userId: String, location: HabitLocation?) async throws {}
+    func habitLogCompletion(
+        habitId: String,
+        userId: String,
+        location: HabitLocation?
+    ) async throws {}
     func fetchTodayLogs(userId: String) async throws -> [HabitLog] { [] }
     func deleteHabit(habitId: String, userId: String) async throws {}
 }

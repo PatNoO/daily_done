@@ -23,7 +23,8 @@ struct daily_doneApp: App {
                 ProgressView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if auth.isSignedIn, let userId = auth.userId {
-                ContentView(userId: userId, auth: auth)
+                ContentView(auth: auth)
+                    .environment(\.userId, userId)
 
             } else if !splashDissmised {
                 SplashView(onGetStarted: { splashDissmised = true })
