@@ -8,7 +8,6 @@ struct MonthlyHeatmapView: View {
         count: 7
     )
 
-
     private let heatmapMinOpacity: Double = 0.25
     private let heatmapOpacityRange: Double = 0.75
 
@@ -24,6 +23,10 @@ struct MonthlyHeatmapView: View {
                     .aspectRatio(1, contentMode: .fit)
                     .accessibilityLabel(entry.label)
                     .accessibilityValue(entry.valueLabel)
+                    .contextMenu {
+                        Text(entry.label)
+                        Text(entry.valueLabel)
+                    }
             }
         }
     }
@@ -39,21 +42,37 @@ struct MonthlyHeatmapView: View {
             return []
         }
 
-       
-        let firstWeekdayOfMonth = calendar.component(.weekday, from: firstOfMonth)
+        let firstWeekdayOfMonth = calendar.component(
+            .weekday,
+            from: firstOfMonth
+        )
         let startOffset = (firstWeekdayOfMonth + 5) % 7
 
         var cells: [GridCell] = []
-
         for _ in 0..<startOffset {
             cells.append(.init(date: nil, count: 0))
         }
-
-        for stat in stats {
-            if stat.id <= today {
-                cells.append(GridCell(date: stat.id, count: stat.count))
-            }
+        guard
+            let range = calendar.range(of: .day, in: .month, for: firstOfMonth)
+        else {
+            return cells
         }
+        for day in 1...range.count {
+            guard
+                let currentDate = calendar.date(
+                    byAdding: .day,
+                    value: day - 1,
+                    to: firstOfMonth
+                )
+            else { continue }
+            let statForDay = stats.first(where: {
+                calendar.isDate($0.id, inSameDayAs: currentDate)
+            })
+            cells.append(
+                GridCell(date: currentDate, count: statForDay?.count ?? 0)
+            )
+        }
+
         return cells
     }
 
@@ -64,10 +83,12 @@ struct MonthlyHeatmapView: View {
             return Color.clear
         }
         if entry.count == 0 {
-            return Color("neutral-light").opacity(0.5)
+            return Color("backgroundSecondary").opacity(0.5)
         }
         let intensity = Double(entry.count) / Double(max(maxCount, 1))
-        return Color("brandPrimary").opacity(heatmapMinOpacity + intensity * heatmapOpacityRange) // ← DD-040: was 0.25 + intensity * 0.75
+        return Color("brandPrimary").opacity(
+            heatmapMinOpacity + intensity * heatmapOpacityRange
+        )
     }
 }
 
