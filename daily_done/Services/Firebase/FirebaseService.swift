@@ -16,19 +16,6 @@ protocol FirebaseServiceProtocol {
     func deleteHabit(habitId: String, userId: String) async throws
 }
 
-// MARK: - Errors
-
-enum FirebaseServiceError: LocalizedError {
-    case invalidDate
-
-    var errorDescription: String? {
-        switch self {
-        case .invalidDate:
-            return "Could not calculate a valid date range. Please try again."
-        }
-    }
-}
-
 // MARK: - Service
 
 actor FirebaseService: FirebaseServiceProtocol {

@@ -1,10 +1,6 @@
 import Combine
 import Foundation
 
-struct DayStat: Identifiable {
-    let id: Date
-    let count: Int
-}
 
 @MainActor
 final class StatsViewModel: ObservableObject {
@@ -70,18 +66,5 @@ final class StatsViewModel: ObservableObject {
             }.count
             return DayStat(id: date, count: count)
         }.reversed()
-    }
-}
-
-extension StatsViewModel {
-    enum StatsError: LocalizedError {
-        case loadFailed(Error)
-
-        var errorDescription: String? {
-            switch self {
-            case .loadFailed:
-                return "Could not load statistics. Please try again."
-            }
-        }
     }
 }

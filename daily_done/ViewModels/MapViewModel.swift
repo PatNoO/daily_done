@@ -2,14 +2,6 @@ import Combine
 import CoreLocation
 import Foundation
 
-struct HabitLogAnnotation: Identifiable {
-    let id: String
-    let habitId: String
-    let habitName: String
-    let completedAt: Date
-    let coordinate: CLLocationCoordinate2D
-}
-
 
 @MainActor
 final class MapViewModel: ObservableObject {
