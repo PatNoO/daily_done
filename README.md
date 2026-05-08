@@ -107,6 +107,18 @@ daily_done/
 
 ---
 
+## What's next 🚧
+
+Daily Done is still actively being developed. The app works end-to-end but there are more features and improvements planned before it's where I want it:
+
+- **Edit habit** — update a habit's name, category, and colour after creation ([#70 DD-039](https://github.com/PatNoO/daily_done/issues/70))
+- Continued polish, better onboarding, and improved mock data
+- More to come — this app is a work in progress
+
+Pull requests and feedback are welcome.
+
+---
+
 ## License
 
 MIT — do whatever you want with it, just maybe build your own streaks too. 💪
