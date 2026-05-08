@@ -122,7 +122,8 @@ final class HabitViewModel: ObservableObject {
         guard !completedHabitIds.contains(habitId) else { return }
         completedHabitIds.insert(habitId)
         
-        let location = await locationService.currentLocation()
+        let locationEnabled = UserDefaults.standard.bool(forKey: UserDefaultsKey.locationEnabled)
+        let location = locationEnabled ? await locationService.currentLocation() : nil
 
         do {
             try await service.habitLogCompletion(
