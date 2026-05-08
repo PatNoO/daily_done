@@ -3,6 +3,12 @@ import SwiftUI
 struct ProfileView: View {
 
     @ObservedObject var vm: AuthViewModel
+    @StateObject private var statsVM: StatsViewModel
+    
+    init(userId: String, vm: AuthViewModel) {
+        self.vm = vm
+        _statsVM = StateObject(wrappedValue: StatsViewModel(userId: userId))
+    }
 
     @AppStorage(UserDefaultsKey.notificationsEnabled) private var notificationsEnabled = true
     @AppStorage(UserDefaultsKey.darkModeEnabled) private var darkModeEnabled = true
@@ -27,6 +33,9 @@ struct ProfileView: View {
         }
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.large)
+        .task {
+            await statsVM.loadStats()
+        }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -81,9 +90,9 @@ struct ProfileView: View {
 
     private var statsSection: some View {
         HStack(spacing: DesignSystem.Spacing.md) {
-            StatCard(value: "0", label: "Habits", color: Color("brandPrimary"))
-            StatCard(value: "0", label: "Done", color: Color("brandPrimary"))
-            StatCard(value: "0", label: "Best streak", color: Color("brandAccent"))
+            StatCard(value: "\(statsVM.habitStats.count)", label: "Habits", color: Color("brandPrimary"))
+            StatCard(value: "\(statsVM.habitStats.reduce(0) { $0 + $1.totalCompletions })", label: "Done", color: Color("brandPrimary"))
+            StatCard(value: "\(statsVM.habitStats.map(\.longestStreak).max() ?? 0)", label: "Best streak", color: Color("brandAccent"))
         }
         .padding(.horizontal, DesignSystem.Spacing.base)
     }
@@ -187,7 +196,7 @@ private struct SettingsRow: View {
 
 #Preview {
     NavigationStack {
-        ProfileView(vm: AuthViewModel())
+        ProfileView(userId: "preview-user" ,vm: AuthViewModel())
     }
     .preferredColorScheme(.dark)
 }

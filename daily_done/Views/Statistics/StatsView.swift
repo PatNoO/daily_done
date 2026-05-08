@@ -126,7 +126,7 @@ private struct HabitStreakRow: View {
         }
         .padding(DesignSystem.Spacing.md)
         .background(
-            Color("neutral-light").opacity(DesignSystem.Opacity.subtle),
+            Color("backgroundSecondary").opacity(DesignSystem.Opacity.subtle),
             in: RoundedRectangle(cornerRadius: DesignSystem.Radius.md)
         )
     }
