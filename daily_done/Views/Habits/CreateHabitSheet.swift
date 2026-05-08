@@ -234,7 +234,7 @@ struct CreateHabitSheet: View {
             await notificationVM.scheduleIfEnabled(for: saved)
             dismiss()
 
-        } catch HabitViewModel.HabitError.nameMissing {
+        } catch HabitError.nameMissing {
             nameError = String(localized: "create_habit.name_required")
         } catch {
             saveError = String(localized: "create_habit.save_error")
