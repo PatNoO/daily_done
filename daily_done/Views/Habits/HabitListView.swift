@@ -1,12 +1,11 @@
 import SwiftUI
 
 struct HabitListView: View {
-    @StateObject private var vm: HabitViewModel
+    @StateObject private var vm = HabitViewModel()
+    @Environment(\.userId) private var userId
     @State private var showCreateSheet = false
 
-    init(userId: String) {
-        _vm = StateObject(wrappedValue: HabitViewModel(userId: userId))
-    }
+    init() { }
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -34,6 +33,7 @@ struct HabitListView: View {
             CreateHabitSheet(vm: vm)
         }
         .task {
+            vm.configure(userId: userId)
             await vm.loadHabits()
         }
         .alert(
@@ -198,6 +198,7 @@ struct HabitListView: View {
 }
 
 #Preview {
-    HabitListView(userId: "preview-user")
+    HabitListView()
+        .environment(\.userId, "preview-user")
         .preferredColorScheme(.dark)
 }

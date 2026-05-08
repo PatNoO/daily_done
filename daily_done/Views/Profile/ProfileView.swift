@@ -4,10 +4,12 @@ struct ProfileView: View {
 
     @ObservedObject var vm: AuthViewModel
     @StateObject private var statsVM: StatsViewModel
+    @Environment(\.userId) private var userId
+
     
-    init(userId: String, vm: AuthViewModel) {
+    init(vm: AuthViewModel) {
         self.vm = vm
-        _statsVM = StateObject(wrappedValue: StatsViewModel(userId: userId))
+        _statsVM = StateObject(wrappedValue: StatsViewModel())
     }
 
     @AppStorage(UserDefaultsKey.notificationsEnabled) private var notificationsEnabled = true
@@ -34,6 +36,7 @@ struct ProfileView: View {
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.large)
         .task {
+            statsVM.configure(userId: userId)
             await statsVM.loadStats()
         }
         .toolbar {
@@ -199,7 +202,8 @@ private struct SettingsRow: View {
 
 #Preview {
     NavigationStack {
-        ProfileView(userId: "preview-user" ,vm: AuthViewModel())
+        ProfileView(vm: AuthViewModel())
     }
+    .environment(\.userId, "preview-user")
     .preferredColorScheme(.dark)
 }

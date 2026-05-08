@@ -11,7 +11,7 @@ final class HabitViewModel: ObservableObject {
     @Published var error: HabitError?
     @Published var completedHabitIds: Set<String> = []
 
-    private let userId: String
+    private var userId: String = ""
     private let service: FirebaseServiceProtocol
     private let notificationService: NotificationServiceProtocol
     private let locationService: LocationServiceProtocol
@@ -19,7 +19,7 @@ final class HabitViewModel: ObservableObject {
     // MARK: - Init
 
     init(
-        userId: String,
+        userId: String = "" ,
         service: FirebaseServiceProtocol? = nil,
         notificationService: NotificationServiceProtocol? = nil,
         locationService: LocationServiceProtocol? = nil
@@ -161,6 +161,10 @@ final class HabitViewModel: ObservableObject {
             )
 
         }
+    }
+    
+    func configure(userId: String) {
+        self.userId = userId
     }
 }
 

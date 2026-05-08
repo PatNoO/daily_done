@@ -11,10 +11,10 @@ final class MapViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var error: String? = nil
 
-    private let userId: String
+    private var userId: String = ""
     private let service: FirebaseServiceProtocol
 
-    init(userId: String, service: FirebaseServiceProtocol? = nil) {
+    init(userId: String = "", service: FirebaseServiceProtocol? = nil) {
         self.userId = userId
         self.service = service ?? FirebaseService.shared
     }
@@ -64,5 +64,9 @@ final class MapViewModel: ObservableObject {
             error = "Could not load map data. Please try again."
             print("MapViewModel loadNearbyHabits failed: \(fetchError.localizedDescription)")
         }
+    }
+    
+    func configure(userId: String) {
+        self.userId = userId
     }
 }

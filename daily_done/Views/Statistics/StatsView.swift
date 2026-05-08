@@ -2,17 +2,20 @@ import SwiftUI
 
 struct StatsView: View {
 
-    init(userId: String, service: FirebaseServiceProtocol? = nil) {
+    init(service: FirebaseServiceProtocol? = nil) {
         _vm = StateObject(
-            wrappedValue: StatsViewModel(userId: userId, service: service)
+            wrappedValue: StatsViewModel(service: service)
         )
     }
     @StateObject private var vm: StatsViewModel
+    @Environment(\.userId) private var userId
+
 
     var body: some View {
         contentView
             .navigationTitle("Statistics")
             .task {
+                vm.configure(userId: userId)
                 await vm.loadStats()
             }
             .alert(
@@ -137,9 +140,8 @@ private struct HabitStreakRow: View {
 // MARK: - Previews
 
 #Preview {
-    NavigationStack {
-        StatsView(userId: "preview-user")
-    }
+    NavigationStack { StatsView() }
+        .environment(\.userId, "preview-user")
 }
 
 #if DEBUG
@@ -213,7 +215,6 @@ private struct MockFirebaseService: FirebaseServiceProtocol {
 #endif
 
 #Preview("Stats — with data") {
-    NavigationStack {
-        StatsView(userId: "preview-user", service: MockFirebaseService())
-    }
+    NavigationStack { StatsView(service: MockFirebaseService()) }
+        .environment(\.userId, "preview-user")
 }
