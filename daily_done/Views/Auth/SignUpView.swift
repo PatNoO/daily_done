@@ -213,7 +213,7 @@ struct SignUpView: View {
     private func signUp() async {
         focusedField = nil
         guard !name.trimmingCharacters(in: .whitespaces).isEmpty else {
-            nameError = "Please enter your name"
+            nameError = String(localized: "sign_up.name_required")
             return
         }
         nameError = nil

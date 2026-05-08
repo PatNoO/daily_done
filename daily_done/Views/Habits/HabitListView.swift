@@ -189,9 +189,9 @@ struct HabitListView: View {
     private var greeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
         switch hour {
-        case Greeting.morningStart..<Greeting.afternoonStart: return "Good morning 👋"
-        case Greeting.afternoonStart..<Greeting.eveningStart: return "Good afternoon 👋"
-        default: return "Good evening 🌙"
+        case Greeting.morningStart..<Greeting.afternoonStart: return String(localized: "habit_list.greeting.morning")
+        case Greeting.afternoonStart..<Greeting.eveningStart: return String(localized: "habit_list.greeting.afternoon")
+        default: return String(localized: "habit_list.greeting.evening")
         }
     }
 

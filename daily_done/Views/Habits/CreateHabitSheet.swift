@@ -235,10 +235,9 @@ struct CreateHabitSheet: View {
             dismiss()
 
         } catch HabitViewModel.HabitError.nameMissing {
-            nameError = "Name is required"
+            nameError = String(localized: "create_habit.name_required")
         } catch {
-            saveError =
-                "Could not save habit. Check your connection and try again."
+            saveError = String(localized: "create_habit.save_error")
         }
     }
 }

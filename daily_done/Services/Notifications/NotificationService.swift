@@ -11,13 +11,15 @@ final class NotificationService: NotificationServiceProtocol {
     static let shared = NotificationService()
     private init() {}
 
-    private static let motivationalPhrases = [
-        "Keep the streak alive!",
-        "Small steps, big results.",
-        "You've got this — one habit at a time.",
-        "Consistency is the key to success.",
-        "Time to build something great today.",
-    ]
+    private static var motivationalPhrases: [String] {
+        [
+            String(localized: "notification.phrase.keep_streak"),
+            String(localized: "notification.phrase.small_steps"),
+            String(localized: "notification.phrase.you_got_this"),
+            String(localized: "notification.phrase.consistency"),
+            String(localized: "notification.phrase.build_great"),
+        ]
+    }
 
     func requestPermission() async -> Bool {
         do {
@@ -39,7 +41,7 @@ final class NotificationService: NotificationServiceProtocol {
 
         let content = UNMutableNotificationContent()
         content.title = habit.name
-        content.body = Self.motivationalPhrases.randomElement() ?? "Time for your habit!"
+        content.body = Self.motivationalPhrases.randomElement() ?? String(localized: "notification.phrase.fallback")
         content.sound = .default
 
         let components = Calendar.current.dateComponents(

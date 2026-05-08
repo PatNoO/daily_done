@@ -75,13 +75,13 @@ struct ProfileView: View {
             .accessibilityHidden(true)
 
             VStack(spacing: DesignSystem.Spacing.xxs) {
-                Text(vm.displayName ?? "User")
+                Text(vm.displayName ?? String(localized: "profile.fallback_name"))
                     .font(.title3).fontWeight(.bold)
                     .foregroundStyle(Color("textPrimary"))
                 Text(vm.email ?? "")
                     .font(.subheadline)
                     .foregroundStyle(Color("textSecondary"))
-                    .accessibilityLabel("Email: \(vm.email ?? "Unknown")")
+                    .accessibilityLabel("Email: \(vm.email ?? String(localized: "profile.email_unknown"))")
             }
         }
     }

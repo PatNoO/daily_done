@@ -63,7 +63,7 @@ struct MapView: View {
     private var filterChipBar: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: DesignSystem.Spacing.sm) {
-                habitChip(label: "All", id: nil)
+                habitChip(label: String(localized: "map.filter.all"), id: nil)
                 ForEach(vm.habits) { habit in
                     habitChip(label: habit.name, id: habit.id)
                 }
