@@ -87,7 +87,7 @@ struct HabitRowView: View {
         }
         .disabled(isCompleted)
         .buttonStyle(.plain)
-        .accessibilityLabel(isCompleted ? "Completed" : "Mark as done")
+        .accessibilityLabel(isCompleted ? Text("Completed") : Text("Mark as done"))
     }
 }
 

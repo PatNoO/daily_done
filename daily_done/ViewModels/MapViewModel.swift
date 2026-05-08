@@ -55,7 +55,7 @@ final class MapViewModel: ObservableObject {
                 guard let loc = log.location,
                     let logId = log.id
                 else { return nil }
-                let name = nameById[log.habitId] ?? "Unknown Habit"
+                let name = nameById[log.habitId] ?? String(localized: "map.unknown_habit")
                 return HabitLogAnnotation(
                     id: logId,
                     habitId: log.habitId,
