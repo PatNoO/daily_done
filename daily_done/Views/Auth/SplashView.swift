@@ -19,14 +19,7 @@ struct SplashView: View {
             VStack(spacing: 0) {
                 Spacer()
 
-                ZStack {
-                    Circle()
-                        .fill(Color("brandPrimary").opacity(DesignSystem.Opacity.logoFill))
-                        .frame(width: DesignSystem.Size.logoCircle, height: DesignSystem.Size.logoCircle)
-                    Image(systemName: "flame.fill")
-                        .font(.system(size: DesignSystem.Size.splashFlame, weight: .medium))
-                        .foregroundStyle(.white)
-                }
+                LogoView(size: DesignSystem.Size.logoCircle)
 
                 Spacer().frame(height: DesignSystem.Spacing.xl)
 
