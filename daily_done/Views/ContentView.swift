@@ -26,7 +26,7 @@ struct ContentView: View {
             }
 
             NavigationStack {
-                ProfileView(vm: auth)
+                ProfileView(userId: userId, vm: auth)
             }
             .tabItem {
                 Label("Profile", systemImage: "person.circle")
