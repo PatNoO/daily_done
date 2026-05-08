@@ -18,6 +18,7 @@ final class NotificationViewModel: ObservableObject {
     }
     
     func scheduleIfEnabled(for habit: Habit) async {
+        guard UserDefaults.standard.bool(forKey: UserDefaultsKey.notificationsEnabled) else { return }
           await service.scheduleReminder(for: habit)
       }
 
