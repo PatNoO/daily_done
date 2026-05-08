@@ -3,6 +3,8 @@ import SwiftUI
 struct ContentView: View {
     let userId: String
     @ObservedObject var auth: AuthViewModel
+    @AppStorage(UserDefaultsKey.darkModeEnabled) private var darkModeEnabled = true
+
     var body: some View {
         TabView {
             NavigationStack {
@@ -32,6 +34,7 @@ struct ContentView: View {
                 Label("Profile", systemImage: "person.circle")
             }
         }
+        .preferredColorScheme(darkModeEnabled ? .dark : .light)
     }
 }
 

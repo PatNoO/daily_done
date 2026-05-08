@@ -98,15 +98,10 @@ struct HabitListView: View {
     }
 
     private var todayHeader: some View {
-        HStack {
-            Text("TODAY")
-                .font(.caption).fontWeight(.semibold)
-                .foregroundStyle(Color("textSecondary"))
-            Spacer()
-            Button("See all") {}
-                .font(.caption).fontWeight(.semibold)
-                .foregroundStyle(Color("brandPrimary"))
-        }
+        Text("TODAY")
+            .font(.caption).fontWeight(.semibold)
+            .foregroundStyle(Color("textSecondary"))
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     // MARK: - Content

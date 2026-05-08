@@ -169,6 +169,8 @@ private struct StatCard: View {
         .padding(.vertical, DesignSystem.Spacing.base)
         .background(Color("backgroundSecondary"))
         .clipShape(RoundedRectangle(cornerRadius: DesignSystem.Radius.md))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(value) \(label)")
     }
 }
 
@@ -188,6 +190,7 @@ private struct SettingsRow: View {
             Toggle("", isOn: $isOn)
                 .labelsHidden()
                 .tint(Color("brandPrimary"))
+                .accessibilityLabel(label)
         }
         .padding(.horizontal, DesignSystem.Spacing.base)
         .padding(.vertical, DesignSystem.Spacing.base)

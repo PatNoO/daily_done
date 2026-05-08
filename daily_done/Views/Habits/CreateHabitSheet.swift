@@ -98,6 +98,7 @@ struct CreateHabitSheet: View {
                                 : Color("textSecondary")
                         )
                         .clipShape(Capsule())
+                        .accessibilityLabel("\(category.rawValue.capitalized)\(selectedCategory == category ? ", selected" : "")")
                     }
                 }
             }
@@ -125,6 +126,8 @@ struct CreateHabitSheet: View {
                             }
                         }
                         .onTapGesture { selectedColorHex = hex }
+                        .accessibilityAddTraits(.isButton)
+                        .accessibilityLabel("Color\(selectedColorHex == hex ? ", selected" : "")")
                 }
             }
         }
@@ -157,6 +160,8 @@ struct CreateHabitSheet: View {
                             )
                             .onTapGesture { selectedIcon = icon }
                     }
+                    .accessibilityAddTraits(.isButton)
+                    .accessibilityLabel("Icon: \(icon)\(selectedIcon == icon ? ", selected" : "")")
                 }
             }
         }
@@ -181,6 +186,7 @@ struct CreateHabitSheet: View {
                 Toggle("", isOn: $reminderEnabled)
                     .labelsHidden()
                     .tint(Color("brandPrimary"))
+                    .accessibilityLabel("Daily reminder")
                     .onChange(of: reminderEnabled) { _, isOn in
                         guard isOn else { return }
                         Task {
