@@ -183,6 +183,7 @@ private struct MockFirebaseService: FirebaseServiceProtocol {
     func habitLogCompletion(habitId: String, userId: String, location: HabitLocation?) async throws {}
     func fetchTodayLogs(userId: String) async throws -> [HabitLog] { [] }
     func deleteHabit(habitId: String, userId: String) async throws {}
+    func updateHabit(_ habit: Habit) async throws {}
 
     func fetchAllLogs(userId: String) async throws -> [HabitLog] {
         let calendar = Calendar.current

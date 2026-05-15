@@ -291,4 +291,5 @@ private struct MockMapService: FirebaseServiceProtocol {
     ) async throws {}
     func fetchTodayLogs(userId: String) async throws -> [HabitLog] { [] }
     func deleteHabit(habitId: String, userId: String) async throws {}
+    func updateHabit(_ habit: Habit) async throws {}
 }

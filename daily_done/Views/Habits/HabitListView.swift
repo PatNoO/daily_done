@@ -4,6 +4,7 @@ struct HabitListView: View {
     @StateObject private var vm = HabitViewModel()
     @Environment(\.userId) private var userId
     @State private var showCreateSheet = false
+    @State private var habitToEdit: Habit? = nil
 
     init() { }
 
@@ -31,6 +32,9 @@ struct HabitListView: View {
 
         .sheet(isPresented: $showCreateSheet) {
             CreateHabitSheet(vm: vm)
+        }
+        .sheet(item: $habitToEdit) { habit in
+            EditHabitSheet(vm: vm, habit: habit)
         }
         .task {
             vm.configure(userId: userId)
@@ -144,6 +148,14 @@ struct HabitListView: View {
                     bottom: DesignSystem.Spacing.xs,
                     trailing: DesignSystem.Spacing.base
                 ))
+                .swipeActions(edge: .leading) {
+                    Button {
+                        habitToEdit = habit
+                    } label: {
+                        Label("Edit", systemImage: "pencil")
+                    }
+                    .tint(Color("brandPrimary"))
+                }
                 .swipeActions(edge: .trailing) {
                     Button(role: .destructive) {
                         Task { await vm.deleteHabit(habit) }

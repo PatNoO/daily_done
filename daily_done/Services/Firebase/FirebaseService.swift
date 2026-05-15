@@ -14,6 +14,7 @@ protocol FirebaseServiceProtocol {
     func fetchTodayLogs(userId: String) async throws -> [HabitLog]
     func fetchAllLogs(userId: String) async throws -> [HabitLog]
     func deleteHabit(habitId: String, userId: String) async throws
+    func updateHabit(_ habit: Habit) async throws
 }
 
 // MARK: - Service
@@ -35,6 +36,19 @@ actor FirebaseService: FirebaseServiceProtocol {
     }
 
     private init() {}
+
+    // MARK: - UPDATE
+
+    func updateHabit(_ habit: Habit) async throws {
+        guard let habitId = habit.id else {
+            throw FirebaseServiceError.invalidId
+        }
+        let ref = db.collection(Collection.habits).document(habitId)
+        let data = try await MainActor.run {
+            try Firestore.Encoder().encode(habit)
+        }
+        try await ref.setData(data, merge: true)
+    }
 
     // MARK: - CREATE
 

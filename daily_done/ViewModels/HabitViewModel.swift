@@ -164,6 +164,20 @@ final class HabitViewModel: ObservableObject {
         }
     }
     
+    func updateHabit(_ habit: Habit) async {
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            try await service.updateHabit(habit)
+            if let idx = habits.firstIndex(where: { $0.id == habit.id }) {
+                habits[idx] = habit
+            }
+        } catch {
+            self.error = .saveFailed(error)
+        }
+    }
+
     func configure(userId: String) {
         self.userId = userId
     }
